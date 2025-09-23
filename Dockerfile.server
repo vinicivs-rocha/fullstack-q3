@@ -1,0 +1,67 @@
+# Multi-stage build para otimizar o tamanho da imagem
+FROM node:20-slim AS base
+
+# Instalar pnpm
+RUN npm install -g pnpm@8.15.6
+
+# Definir diretório de trabalho
+WORKDIR /app
+
+# Copiar arquivos de configuração do workspace
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY turbo.json ./
+
+# Copiar configurações dos packages
+COPY packages/ ./packages/
+COPY apps/api/package.json ./apps/api/
+
+# Instalar dependências
+RUN pnpm install --frozen-lockfile
+
+# Stage de build
+FROM base AS builder
+
+# Copiar código fonte
+COPY apps/api/ ./apps/api/
+COPY packages ./packages/
+
+# Build da aplicação
+RUN pnpm build
+
+# Stage de produção
+FROM node:20-slim AS production
+
+# Instalar pnpm
+RUN npm install -g pnpm@8.15.6
+
+# Criar usuário não-root
+RUN groupadd --gid 1001 nodejs
+RUN useradd --uid 1001 --gid nodejs --shell /bin/bash --create-home nestjs
+
+# Definir diretório de trabalho
+WORKDIR /app
+
+# Copiar arquivos de configuração do workspace
+COPY --from=builder /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml ./
+COPY --from=builder /app/turbo.json ./
+
+# Copiar packages workspace (necessário para resolver dependências workspace)
+COPY --from=builder /app/packages ./packages/
+
+# Copiar package.json da API
+COPY --from=builder /app/apps/api/package.json ./apps/api/
+
+# Instalar apenas dependências de produção
+RUN pnpm install --prod --frozen-lockfile
+
+# Copiar o build da aplicação
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+
+# Mudar para usuário não-root
+USER nestjs
+
+# Expor porta
+EXPOSE 3001
+
+# Comando para iniciar a aplicação
+CMD ["node", "apps/api/dist/main.js"]

@@ -1,0 +1,86 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: fullstack-q3-postgres
+    environment:
+      POSTGRES_DB: fullstack_q3
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - api-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: fullstack-q3-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - api-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    container_name: fullstack-q3-server
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      DB_DATABASE: fullstack_q3
+      TYPEORM_SEEDING_FACTORIES: apps/api/src/factories/**/*{.ts,.js}
+      TYPEORM_SEEDING_SEEDS: apps/api/src/seeds/**/*{.ts,.js}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: secret
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - api-network
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: fullstack-q3-web
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      API_URL: http://server:3001
+    ports:
+      - "3000:3000"
+    networks:
+      - api-network
+    restart: unless-stopped
+    depends_on:
+      server:
+        condition: service_started
+
+volumes:
+  postgres_data:
+
+networks:
+  api-network:
+    driver: bridge

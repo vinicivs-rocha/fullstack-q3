@@ -1,0 +1,73 @@
+# Multi-stage build para otimizar o tamanho da imagem
+FROM node:20-slim AS base
+
+# Instalar pnpm
+RUN npm install -g pnpm@8.15.6
+
+# Definir diretório de trabalho
+WORKDIR /app
+
+# Copiar arquivos de configuração do workspace
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY turbo.json ./
+
+# Copiar configurações dos packages
+COPY packages/ ./packages/
+COPY apps/web/package.json ./apps/web/
+
+# Instalar dependências
+RUN pnpm install --frozen-lockfile
+
+# Stage de build
+FROM base AS builder
+
+# Copiar código fonte
+COPY apps/web/ ./apps/web/
+COPY packages ./packages/
+
+# Build da aplicação Next.js
+RUN pnpm build --filter=web
+
+# Stage de produção
+FROM node:20-slim AS production
+
+# Instalar pnpm
+RUN npm install -g pnpm@8.15.6
+
+# Criar usuário não-root
+RUN groupadd --gid 1001 nodejs
+RUN useradd --uid 1001 --gid nodejs --shell /bin/bash --create-home nextjs
+
+# Definir diretório de trabalho
+WORKDIR /app
+
+# Copiar arquivos de configuração do workspace
+COPY --from=builder /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml ./
+COPY --from=builder /app/turbo.json ./
+
+# Copiar packages workspace (necessário para resolver dependências workspace)
+COPY --from=builder /app/packages ./packages/
+
+# Copiar package.json do web
+COPY --from=builder /app/apps/web/package.json ./apps/web/
+
+# Instalar apenas dependências de produção
+RUN pnpm install --prod --frozen-lockfile
+
+# Copiar o build da aplicação Next.js
+COPY --from=builder /app/apps/web/.next/standalone ./
+COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder /app/apps/web/public ./apps/web/public
+
+# Mudar para usuário não-root
+USER nextjs
+
+# Expor porta
+EXPOSE 3000
+
+# Definir variáveis de ambiente
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Comando para iniciar a aplicação
+CMD ["node", "apps/web/server.js"]

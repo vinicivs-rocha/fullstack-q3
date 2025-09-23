@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+README.md
+.env
+.nyc_output
+coverage
+.vscode
+.turbo
+dist
+*.log
+.DS_Store
+apps/api/node_modules
+apps/api/dist
+apps/api/test
+apps/api/coverage

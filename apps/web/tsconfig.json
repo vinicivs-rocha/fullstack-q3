@@ -1,0 +1,19 @@
+{
+  "exclude": ["node_modules"],
+  "extends": "@fullstack-q3/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "jsx": "preserve",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "include": ["src", "next.config.ts", "next-env.d.ts", ".next/types/**/*.ts"]
+}
