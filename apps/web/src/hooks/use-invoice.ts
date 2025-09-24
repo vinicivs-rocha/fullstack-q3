@@ -1,9 +1,10 @@
 import { InvoiceService } from "@/services/invoices.service";
 import { container } from "@/lib/di-container";
 import { TYPES } from "@/lib/di-types";
-import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState, useEffect, useRef } from "react";
 import { InvoicesFiltersSchema, InvoiceStatus } from "@fullstack-q3/contracts";
+import { InvoiceDetailingModalRef } from "@/components/invoice-detailing-modal";
 
 export const useInvoice = (
   invoiceService: InvoiceService = container.get(TYPES.InvoiceService)
@@ -14,14 +15,10 @@ export const useInvoice = (
   const [endsAt, setEndsAt] = useState<string | undefined>(undefined);
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [debouncedSearch, setDebouncedSearch] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(search);
-    }, 750);
-
-    return () => clearTimeout(timer);
-  }, [search]);
+  const [invoiceId, setInvoiceId] = useState<number | undefined>(undefined);
+  const [isDetailing, setIsDetailing] = useState(false);
+  const [pendingExport, setPendingExport] = useState(false);
+  const detailingModalRef = useRef<InvoiceDetailingModalRef | null>(null);
 
   const invoicesQuery = useQuery({
     queryKey: ["invoices", page, status, startsAt, endsAt, debouncedSearch],
@@ -34,6 +31,44 @@ export const useInvoice = (
     queryFn: () => invoiceService.stats(InvoicesFiltersSchema.parse({ start: startsAt, end: endsAt })),
     enabled: typeof window !== "undefined" && !!sessionStorage.getItem("accessToken"), 
   });
+
+  const invoiceDetailsQuery = useQuery({
+    queryKey: ["invoice-details", invoiceId],
+    queryFn: () => invoiceService.detail(invoiceId!),
+    enabled: typeof window !== "undefined" && !!sessionStorage.getItem("accessToken") && !!invoiceId, 
+  });
+
+  const exportInvoiceMutation = useMutation({
+    mutationKey: ["export-invoice", invoiceDetailsQuery.data?.vehicle.plate, invoiceDetailsQuery.data?.id],
+    mutationFn: () => {
+      return invoiceService.export(detailingModalRef.current!, invoiceDetailsQuery.data?.vehicle.plate, invoiceDetailsQuery.data?.id)
+    },
+    onSuccess: () => {
+      setIsDetailing(false);
+      setInvoiceId(undefined);
+    },
+    onError: (error) => {
+      console.error(error);
+    }
+  });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 750);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
+    if (pendingExport && invoiceDetailsQuery.data && !invoiceDetailsQuery.isLoading) {
+      exportInvoiceMutation.mutate();
+      setPendingExport(false);
+    }
+  // eslint-disable-next-line @tanstack/query/no-unstable-deps
+  }, [pendingExport, invoiceDetailsQuery?.data, invoiceDetailsQuery?.isLoading, exportInvoiceMutation]);
+
+  
 
   return {
     invoicesQuery,
@@ -48,5 +83,22 @@ export const useInvoice = (
     setEndsAt,
     search,
     setSearch,
+    detail: (id: number) => {
+      setInvoiceId(id);
+      setIsDetailing(true);
+    },
+    invoiceDetailsQuery,
+    stopDetailing: () => {
+      setIsDetailing(false);
+      setInvoiceId(undefined);
+    },
+    isDetailing,
+    exportInvoiceMutation,
+    detailingModalRef,
+    exportInvoice: (id: number) => {
+      setInvoiceId(id);
+      setIsDetailing(true);
+      setPendingExport(true);
+    }
   };
 };

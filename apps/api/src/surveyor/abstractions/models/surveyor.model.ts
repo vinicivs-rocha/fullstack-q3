@@ -18,6 +18,12 @@ export class SurveyorModel {
   gender!: 'M' | 'F';
 
   @Column()
+  phone!: string;
+
+  @Column()
+  license!: string;
+
+  @Column()
   password!: string;
 
   @OneToMany(() => InvoiceModel, (invoice) => invoice.surveyor)

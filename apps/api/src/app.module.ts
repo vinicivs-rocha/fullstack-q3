@@ -15,6 +15,8 @@ import InvoiceFactory from './seeds/factories/invoice.factory';
 import { CreateVehicleTable1758718960773 } from './migrations/1758718960773-CreateVehicleTable';
 import { CreateInvoiceTable1758718973738 } from './migrations/1758718973738-CreateInvoiceTable';
 import { AddNameAndGenderToSurveyorTable1758718978616 } from './migrations/1758718978616-AddNameAndGenderToSurveyorTable';
+import { AddPhoneAndLicenseToSurveyorTable1758719001000 } from './migrations/1758719001000-AddPhoneAndLicenseToSurveyorTable';
+import { AddColorFuelTypeAndMileageToVehicleTable1758719000000 } from './migrations/1758719000000-AddColorFuelTypeAndMileageToVehicleTable';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { AddNameAndGenderToSurveyorTable1758718978616 } from './migrations/17587
           CreateVehicleTable1758718960773,
           CreateInvoiceTable1758718973738,
           AddNameAndGenderToSurveyorTable1758718978616,
+          AddColorFuelTypeAndMileageToVehicleTable1758719000000,
+          AddPhoneAndLicenseToSurveyorTable1758719001000,
         ],
         autoLoadEntities: true,
         migrationsRun: true,

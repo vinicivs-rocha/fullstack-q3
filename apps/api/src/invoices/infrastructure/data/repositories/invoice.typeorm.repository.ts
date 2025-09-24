@@ -76,4 +76,38 @@ export class InvoiceTypeormRepository implements InvoiceRepository {
       total,
     };
   }
+
+  async detail(id: number): Promise<InvoiceModel> {
+    return this.invoiceRepository.findOneOrFail({
+      select: {
+        id: true,
+        status: true,
+        createdAt: true,
+        observation: true,
+        price: true,
+        duration: true,
+        vehicle: {
+          id: true,
+          plate: true,
+          model: true,
+          brand: true,
+          year: true,
+          color: true,
+          fuelType: true,
+          mileage: true,
+          chassis: true,
+        },
+        surveyor: {
+          id: true,
+          name: true,
+          gender: true,
+          email: true,
+          phone: true,
+          license: true,
+        },
+      },
+      where: { id },
+      relations: ['vehicle', 'surveyor'],
+    });
+  }
 }

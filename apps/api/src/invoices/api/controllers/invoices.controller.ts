@@ -1,13 +1,22 @@
 import {
+  DetailedInvoice,
   InvoicesListResponse,
   InvoicesStats,
   type InvoicesFilters,
 } from '@fullstack-q3/contracts';
-import { Controller, Get, Inject, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { SurveyorJwtGuard } from 'src/auth/api/guards/surveyor.jwt.guard';
 import { InvoiceRepository } from 'src/invoices/abstractions/repositories/invoice.repository';
-import { ListInvoicesPresenter } from '../presenters/list-invoices.presenter';
 import { InvoiceTypeormRepository } from 'src/invoices/infrastructure/data/repositories/invoice.typeorm.repository';
+import { DetailInvoicePresenter } from '../presenters/detail-invoice.presenter';
+import { ListInvoicesPresenter } from '../presenters/list-invoices.presenter';
 
 @Controller('invoices')
 export class InvoicesController {
@@ -47,6 +56,14 @@ export class InvoicesController {
         page: filters.page,
         limit: filters.limit,
       }),
+    );
+  }
+
+  @UseGuards(SurveyorJwtGuard)
+  @Get(':id')
+  async detail(@Param('id') id: number): Promise<DetailedInvoice> {
+    return DetailInvoicePresenter.toHttp(
+      await this.invoiceRepository.detail(id),
     );
   }
 }

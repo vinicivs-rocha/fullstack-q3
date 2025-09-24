@@ -13,4 +13,13 @@ export default setSeederFactory(VehicleModel, (faker) => ({
     name: faker.person.fullName(),
     email: faker.internet.email(),
   },
+  color: faker.color.human(),
+  fuelType: faker.helpers.arrayElement([
+    'GASOLINA',
+    'ETANOL',
+    'FLEX',
+    'DIESEL',
+    'ELETRICO',
+    'HIBRIDO',
+  ]),
 }));

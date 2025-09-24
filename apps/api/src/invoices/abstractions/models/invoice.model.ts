@@ -17,8 +17,8 @@ export class InvoiceModel {
   @Column({ enum: ['PENDENTE', 'APROVADA', 'REPROVADA'], default: 'PENDENTE' })
   status!: InvoiceStatus;
 
-  @Column({})
-  observation!: string;
+  @Column({ type: 'text', nullable: true })
+  observation?: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price!: number;

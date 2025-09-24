@@ -6,6 +6,7 @@ export abstract class InvoiceRepository {
   abstract findAll(
     filters: InvoiceRepository.FindAllFilters,
   ): Promise<InvoiceRepository.FindAllResponse>;
+  abstract detail(id: number): Promise<InvoiceModel>;
 }
 
 export namespace InvoiceRepository {

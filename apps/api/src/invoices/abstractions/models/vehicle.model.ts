@@ -6,6 +6,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { InvoiceModel } from './invoice.model';
+import type { FuelType } from '@fullstack-q3/contracts';
 
 export class ProprietaryModel {
   @Column()
@@ -34,6 +35,18 @@ export class VehicleModel {
 
   @Column()
   chassis!: string;
+
+  @Column()
+  color!: string;
+
+  @Column({
+    type: 'enum',
+    enum: ['GASOLINA', 'ETANOL', 'FLEX', 'DIESEL', 'ELETRICO', 'HIBRIDO'],
+  })
+  fuelType!: FuelType;
+
+  @Column({ nullable: true })
+  mileage?: number;
 
   @CreateDateColumn()
   createdAt!: Date;
