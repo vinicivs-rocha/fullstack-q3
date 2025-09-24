@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { Container } from "inversify";
 import axios, { AxiosInstance } from "axios";
 import { AuthService } from "@/services/auth.service";
+import { InvoiceService } from "@/services/invoices.service";
 import { TYPES } from "./di-types";
 import { setupAxiosInterceptors } from "./axios-interceptors";
 
@@ -22,5 +23,6 @@ container.bind<AxiosInstance>(TYPES.Axios).toResolvedValue(
 ).inSingletonScope();
 
 container.bind<AuthService>(TYPES.AuthService).to(AuthService);
+container.bind<InvoiceService>(TYPES.InvoiceService).to(InvoiceService);
 
 export { container };

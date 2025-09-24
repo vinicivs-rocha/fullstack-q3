@@ -4,4 +4,6 @@ import { setSeederFactory } from 'typeorm-extension';
 export default setSeederFactory(SurveyorModel, (faker) => ({
   email: faker.internet.email(),
   password: faker.internet.password(),
+  name: faker.person.fullName(),
+  gender: faker.helpers.arrayElement(['M', 'F']),
 }));

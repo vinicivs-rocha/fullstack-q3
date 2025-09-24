@@ -73,8 +73,10 @@ export const setupAxiosInterceptors = (axiosInstance: AxiosInstance) => {
             return Promise.reject(error);
           }
 
-          const response = await axiosInstance.post('/auth/refresh-token', {
-            refreshToken
+          const response = await axiosInstance.post('/auth/refresh-token', undefined, {
+            headers: {
+              'Authorization': `Bearer ${refreshToken}`,
+            },
           });
 
           const { accessToken } = response.data;

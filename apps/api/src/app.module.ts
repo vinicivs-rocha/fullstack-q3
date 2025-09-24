@@ -8,7 +8,13 @@ import { CreateSurveyorTable1700000000000 } from './migrations/1700000000000-Cre
 import { DataSource } from 'typeorm';
 import { runSeeders } from 'typeorm-extension';
 import { SurveyorSeeder } from './seeds/seeders/surveyor.seeder';
+import { InvoiceSeeder } from './seeds/seeders/invoice.seeder';
 import SurveyorFactory from './seeds/factories/surveyor.factory';
+import VehicleFactory from './seeds/factories/vehicle.factory';
+import InvoiceFactory from './seeds/factories/invoice.factory';
+import { CreateVehicleTable1758718960773 } from './migrations/1758718960773-CreateVehicleTable';
+import { CreateInvoiceTable1758718973738 } from './migrations/1758718973738-CreateInvoiceTable';
+import { AddNameAndGenderToSurveyorTable1758718978616 } from './migrations/1758718978616-AddNameAndGenderToSurveyorTable';
 
 @Module({
   imports: [
@@ -24,7 +30,12 @@ import SurveyorFactory from './seeds/factories/surveyor.factory';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        migrations: [CreateSurveyorTable1700000000000],
+        migrations: [
+          CreateSurveyorTable1700000000000,
+          CreateVehicleTable1758718960773,
+          CreateInvoiceTable1758718973738,
+          AddNameAndGenderToSurveyorTable1758718978616,
+        ],
         autoLoadEntities: true,
         migrationsRun: true,
         logging: true,
@@ -50,8 +61,8 @@ export class AppModule implements OnModuleInit {
       this.dataSource.isInitialized
     ) {
       await runSeeders(this.dataSource, {
-        seeds: [SurveyorSeeder],
-        factories: [SurveyorFactory],
+        seeds: [SurveyorSeeder, InvoiceSeeder],
+        factories: [SurveyorFactory, VehicleFactory, InvoiceFactory],
       });
     }
   }
