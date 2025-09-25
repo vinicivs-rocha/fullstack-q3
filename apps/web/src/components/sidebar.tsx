@@ -13,6 +13,7 @@ interface SidebarProps {
     gender: string;
     avatar?: string;
   };
+  onLogOut: () => void;
 }
 
 const navigation = [
@@ -22,7 +23,7 @@ const navigation = [
   { name: "Relatórios", href: "/relatorios", icon: <ChartBar /> },
 ];
 
-export function Sidebar({ user }: SidebarProps) {
+export function Sidebar({ user, onLogOut }: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -72,7 +73,7 @@ export function Sidebar({ user }: SidebarProps) {
             <p className="text-sm font-medium text-gray-900">{user.name}</p>
             <p className="text-xs text-gray-500">{user.gender === "M" ? "Vistoriador" : "Vistoriadora"}</p>
           </div>
-          <button className="ml-2 text-gray-400 hover:text-gray-600">
+          <button onClick={onLogOut} className="ml-2 text-gray-400 hover:text-gray-600">
             <span className="sr-only">Sair</span>
               <LogOut className="h-5 w-5" />
           </button>

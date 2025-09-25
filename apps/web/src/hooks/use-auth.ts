@@ -45,17 +45,24 @@ export const useAuth = (
         },
     })
 
-    const logoutMutation = useMutation({
-        mutationFn: () => authService.clearTokens(),
+    const logOutMutation = useMutation({
+        mutationFn: () => authService.logOut(),
         onSuccess: () => {
             toast.success('Logout realizado com sucesso!');
             router.push('/sign-in');
+        },
+        onError: (error: unknown) => {
+            if (error instanceof AxiosError) {
+                toast.error(error.response?.data.errorCode === ErrorCode.UNAUTHORIZED_SURVEYOR ? "Credenciais inválidas" : "Erro ao fazer login. Verifique suas credenciais e tente novamente.");
+            } else {
+                toast.error("Erro ao fazer login. Verifique suas credenciais e tente novamente.");
+            }
         },
     });
 
     return {
         signInMutation,
         meQuery,
-        logoutMutation,
+        logOut: () => logOutMutation.mutate(),
     }
 }

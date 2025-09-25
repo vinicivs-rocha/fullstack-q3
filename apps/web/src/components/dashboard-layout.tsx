@@ -8,7 +8,7 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { meQuery } = useAuth();
+  const { meQuery, logOut } = useAuth();
 
   if (meQuery.isLoading) {
     return (
@@ -34,7 +34,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar user={user} />
+      <Sidebar user={user} onLogOut={logOut} />
       <div className="flex-1 flex flex-col overflow-hidden">
         {children}
       </div>

@@ -47,6 +47,7 @@ export class AuthGatewayImplementation implements AuthGateway {
         expiresIn: '15m',
       },
     );
+    await this.redis.sadd(`active-tokens:${sub}`, accessToken);
 
     if (refreshable) {
       const refreshToken = this.jwtService.sign(
@@ -73,5 +74,18 @@ export class AuthGatewayImplementation implements AuthGateway {
     const { sub } = this.jwtService.verify(data.refreshToken);
     const refreshToken = await this.redis.get(`refresh-token:${sub}`);
     return !!refreshToken;
+  }
+
+  async validateAccessToken(
+    data: AuthGateway.ValidateAccessTokenData,
+  ): Promise<boolean> {
+    const { sub } = this.jwtService.verify(data.accessToken);
+    const activeTokens = await this.redis.smembers(`active-tokens:${sub}`);
+    return activeTokens.includes(data.accessToken);
+  }
+
+  async logOut(data: AuthGateway.LogOutData): Promise<void> {
+    await this.redis.del(`refresh-token:${data.surveyorId}`);
+    await this.redis.srem(`active-tokens:${data.surveyorId}`, data.accessToken);
   }
 }

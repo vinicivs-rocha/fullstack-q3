@@ -45,4 +45,9 @@ export class AuthService {
     async clearTokens(): Promise<void> {
         sessionStorage.clear();
     }
+
+    async logOut(): Promise<void> {
+        await this.httpClient.post('/auth/log-out');
+        sessionStorage.clear();
+    }
 }

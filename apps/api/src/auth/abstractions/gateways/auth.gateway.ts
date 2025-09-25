@@ -8,6 +8,10 @@ export abstract class AuthGateway {
   abstract validateRefreshToken(
     data: AuthGateway.ValidateRefreshTokenData,
   ): Promise<boolean>;
+  abstract validateAccessToken(
+    data: AuthGateway.ValidateAccessTokenData,
+  ): Promise<boolean>;
+  abstract logOut(data: AuthGateway.LogOutData): Promise<void>;
 }
 
 export namespace AuthGateway {
@@ -28,5 +32,14 @@ export namespace AuthGateway {
 
   export interface ValidateRefreshTokenData {
     refreshToken: string;
+  }
+
+  export interface ValidateAccessTokenData {
+    accessToken: string;
+  }
+
+  export interface LogOutData {
+    surveyorId: number;
+    accessToken: string;
   }
 }
