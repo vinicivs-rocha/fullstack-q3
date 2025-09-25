@@ -5,6 +5,8 @@ import { AuthService } from "@/services/auth.service";
 import { InvoiceService } from "@/services/invoices.service";
 import { TYPES } from "./di-types";
 import { setupAxiosInterceptors } from "./axios-interceptors";
+import { VehicleService } from "@/services/vehicle.service";
+import { ProblemsService } from "@/services/problems.service";
 
 const container = new Container();
 
@@ -24,5 +26,7 @@ container.bind<AxiosInstance>(TYPES.Axios).toResolvedValue(
 
 container.bind<AuthService>(TYPES.AuthService).to(AuthService);
 container.bind<InvoiceService>(TYPES.InvoiceService).to(InvoiceService);
+container.bind<VehicleService>(TYPES.VehicleService).to(VehicleService);
+container.bind<ProblemsService>(TYPES.ProblemsService).to(ProblemsService);
 
 export { container };

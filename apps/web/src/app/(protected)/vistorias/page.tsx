@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { useInvoice } from "@/hooks/use-invoice";
-import { Invoice } from "@fullstack-q3/contracts";
+import { InvoicesListResponse } from "@fullstack-q3/contracts";
 import { PaginationState, Row } from "@tanstack/react-table";
 import { Car, Check, Clock, Download, Eye, Pencil, Plus, X } from "lucide-react";
+import Link from "next/link";
 
 export default function VistoriasPage() {  
   const {
@@ -38,7 +39,7 @@ export default function VistoriasPage() {
     {
       accessorKey: "vehicle.plate",
       header: "Veículo",
-      cell: ({ row }: {row: Row<Invoice>}) => {
+      cell: ({ row }: {row: Row<InvoicesListResponse['invoices'][number]>}) => {
         const vistoria = row.original;
         return (
           <div className="flex items-center">
@@ -62,7 +63,7 @@ export default function VistoriasPage() {
     {
       accessorKey: "createdAt",
       header: "Data",
-      cell: ({ row }: {row: Row<Invoice>}) => {
+      cell: ({ row }: {row: Row<InvoicesListResponse['invoices'][number]>}) => {
         const date = new Date(row.getValue("createdAt"));
         return <div className="text-sm">{date.toLocaleDateString('pt-BR')}</div>;
       },
@@ -70,7 +71,7 @@ export default function VistoriasPage() {
     {
       accessorKey: "surveyor.name",
       header: "Vistoriador",
-      cell: ({ row }: {row: Row<Invoice>}) => {
+      cell: ({ row }: {row: Row<InvoicesListResponse['invoices'][number]>}) => {
         const vistoria = row.original;
         return (
           <div className="flex items-center">
@@ -93,7 +94,7 @@ export default function VistoriasPage() {
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }: {row: Row<Invoice>}) => {
+      cell: ({ row }: {row: Row<InvoicesListResponse['invoices'][number]>}) => {
         const status = row.getValue("status") as string;
         
         const getStatusConfig = (status: string) => {
@@ -124,7 +125,7 @@ export default function VistoriasPage() {
     {
       id: "actions",
       header: "Ações",
-      cell: ({ row }: {row: Row<Invoice>}) => {
+      cell: ({ row }: {row: Row<InvoicesListResponse['invoices'][number]>}) => {
         const invoice = row.original;
   
         return (
@@ -182,9 +183,11 @@ export default function VistoriasPage() {
             <h1 className="text-2xl font-bold text-gray-900">Vistorias</h1>
             <p className="text-gray-600">Gerencie todas as vistorias realizadas</p>
           </div>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Nova Vistoria
+          <Button asChild>
+            <Link href="/vistorias/nova">
+              <Plus className="mr-2 h-4 w-4" />
+              Nova Vistoria
+            </Link>
           </Button>
         </div>
       </div>

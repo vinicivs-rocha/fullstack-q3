@@ -1,8 +1,8 @@
-import { DetailedInvoice } from '@fullstack-q3/contracts';
+import { DetailedInvoiceResponse } from '@fullstack-q3/contracts';
 import { InvoiceModel } from 'src/invoices/abstractions/models/invoice.model';
 
 export class DetailInvoicePresenter {
-  static toHttp(invoice: InvoiceModel): DetailedInvoice {
+  static toHttp(invoice: InvoiceModel): DetailedInvoiceResponse {
     return {
       id: invoice.id,
       vehicle: {
@@ -29,6 +29,10 @@ export class DetailInvoicePresenter {
       observation: invoice.observation,
       price: invoice.price,
       duration: invoice.duration,
+      problems: invoice.problems.map((problem) => ({
+        id: problem.id,
+        label: problem.label,
+      })),
     };
   }
 }

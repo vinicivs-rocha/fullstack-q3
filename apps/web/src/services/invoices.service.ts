@@ -1,9 +1,10 @@
 import { TYPES } from "@/lib/di-types";
 import {
-    DetailedInvoice,
+    DetailedInvoiceResponse,
     InvoicesFilters,
+    InvoicesStatsResponse,
     InvoicesListResponse,
-    InvoicesStats
+    InvoiceCreationData,
 } from "@fullstack-q3/contracts";
 import { Axios } from "axios";
 import { inject, injectable } from "inversify";
@@ -23,12 +24,12 @@ export class InvoiceService {
         return response.data;
     }
 
-    async stats(filters: InvoicesFilters): Promise<InvoicesStats> {
+    async stats(filters: InvoicesFilters): Promise<InvoicesStatsResponse> {
         const response = await this.httpClient.get('/invoices/stats', { params: filters });
         return response.data;
     }
 
-    async detail(id: number): Promise<DetailedInvoice> {
+    async detail(id: number): Promise<DetailedInvoiceResponse> {
         const response = await this.httpClient.get(`/invoices/${id}`);
         return response.data
     }
@@ -89,5 +90,9 @@ export class InvoiceService {
         }
 
         pdf.save(`vistoria_${vehiclePlate}_${invoiceId}.pdf`);
+    }
+
+    async create(data: InvoiceCreationData): Promise<void> {
+        await this.httpClient.post('/invoices', data);
     }
 }

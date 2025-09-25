@@ -1,7 +1,8 @@
 import {
-  DetailedInvoice,
+  DetailedInvoiceResponse,
+  type InvoiceCreationData,
   InvoicesListResponse,
-  InvoicesStats,
+  InvoicesStatsResponse,
   type InvoicesFilters,
 } from '@fullstack-q3/contracts';
 import {
@@ -9,6 +10,7 @@ import {
   Get,
   Inject,
   Param,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -17,6 +19,9 @@ import { InvoiceRepository } from 'src/invoices/abstractions/repositories/invoic
 import { InvoiceTypeormRepository } from 'src/invoices/infrastructure/data/repositories/invoice.typeorm.repository';
 import { DetailInvoicePresenter } from '../presenters/detail-invoice.presenter';
 import { ListInvoicesPresenter } from '../presenters/list-invoices.presenter';
+import { Body } from '@nestjs/common';
+import { User } from 'src/auth/api/decorators/user.decorator';
+import { UserModel } from 'src/auth/abstractions/models/user.model';
 
 @Controller('invoices')
 export class InvoicesController {
@@ -27,7 +32,9 @@ export class InvoicesController {
 
   @UseGuards(SurveyorJwtGuard)
   @Get('stats')
-  async getStats(@Query() filters: InvoicesFilters): Promise<InvoicesStats> {
+  async getStats(
+    @Query() filters: InvoicesFilters,
+  ): Promise<InvoicesStatsResponse> {
     return {
       total: await this.invoiceRepository.count({
         start: filters.start,
@@ -70,9 +77,26 @@ export class InvoicesController {
 
   @UseGuards(SurveyorJwtGuard)
   @Get(':id')
-  async detail(@Param('id') id: number): Promise<DetailedInvoice> {
+  async detail(@Param('id') id: number): Promise<DetailedInvoiceResponse> {
     return DetailInvoicePresenter.toHttp(
       await this.invoiceRepository.detail(id),
     );
+  }
+
+  @UseGuards(SurveyorJwtGuard)
+  @Post()
+  async create(
+    @Body() data: InvoiceCreationData,
+    @User() user: UserModel,
+  ): Promise<void> {
+    await this.invoiceRepository.create({
+      vehicleId: data.vehicleId,
+      surveyorId: user.id,
+      problems: data.problems,
+      status: data.status,
+      price: data.price,
+      duration: data.duration,
+      observation: data.observation,
+    });
   }
 }

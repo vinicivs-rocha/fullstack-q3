@@ -3,25 +3,6 @@ import { z } from 'zod';
 export const InvoiceStatusSchema = z.enum(["PENDENTE", "APROVADA", "REPROVADA"]);
 export type InvoiceStatus = z.infer<typeof InvoiceStatusSchema>;
 
-export const VehicleSchema = z.object({
-  id: z.number(),
-  plate: z.string(),
-  model: z.string(),
-  brand: z.string(),
-  year: z.number(),
-});
-
-export const InvoiceSchema = z.object({
-  id: z.number(),
-  vehicle: VehicleSchema,
-  createdAt: z.string(),
-  surveyor: z.object({
-    name: z.string(),
-    gender: z.enum(["M", "F"]),
-  }),
-  status: InvoiceStatusSchema,
-});
-
 export const InvoicesFiltersSchema = z.object({
   status: InvoiceStatusSchema.optional(),
   start: z.coerce.date().optional(),
@@ -32,21 +13,35 @@ export const InvoicesFiltersSchema = z.object({
 });
 
 export const InvoicesListResponseSchema = z.object({
-  invoices: z.array(InvoiceSchema),
+  invoices: z.array(z.object({
+    id: z.number(),
+    vehicle: z.object({
+      id: z.number(),
+      plate: z.string(),
+      model: z.string(),
+      brand: z.string(),
+      year: z.number(),
+    }),
+    createdAt: z.string(),
+    surveyor: z.object({
+      name: z.string(),
+      gender: z.enum(["M", "F"]),
+    }),
+    status: InvoiceStatusSchema,
+  })),
   total: z.number(),
 });
 
-export const InvoicesStatsSchema = z.object({
+export const InvoicesStatsResponseSchema = z.object({
   total: z.number(),
   pending: z.number(),
   approved: z.number(),
   rejected: z.number(),
 });
 
-export type Invoice = z.infer<typeof InvoiceSchema>;
+export type InvoicesStatsResponse = z.infer<typeof InvoicesStatsResponseSchema>;
 export type InvoicesFilters = z.infer<typeof InvoicesFiltersSchema>;
 export type InvoicesListResponse = z.infer<typeof InvoicesListResponseSchema>;
-export type InvoicesStats = z.infer<typeof InvoicesStatsSchema>;
 
 export const FuelTypeSchema = z.enum(["GASOLINA", "ETANOL", "FLEX", "DIESEL", "ELETRICO", "HIBRIDO"]);
 export type FuelType = z.infer<typeof FuelTypeSchema>;
@@ -77,6 +72,24 @@ export const DetailedInvoiceSchema = z.object({
   observation: z.string().optional(),
   price: z.number(),
   duration: z.number(),
+  problems: z.array(z.object({
+    id: z.number(),
+    label: z.string(),
+  })),
 });
 
-export type DetailedInvoice = z.infer<typeof DetailedInvoiceSchema>;
+export type DetailedInvoiceResponse = z.infer<typeof DetailedInvoiceSchema>;
+
+export const InvoiceCreationDataSchema = z.object({
+  vehicleId: z.number(),
+  problems: z.array(z.object({
+    id: z.number().optional(),
+    label: z.string().optional(),
+  })),
+  status: InvoiceStatusSchema,
+  price: z.number(),
+  duration: z.number(),
+  observation: z.string().optional(),
+});
+
+export type InvoiceCreationData = z.infer<typeof InvoiceCreationDataSchema>;

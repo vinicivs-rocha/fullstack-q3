@@ -1,4 +1,5 @@
 import { InvoiceModel } from 'src/invoices/abstractions/models/invoice.model';
+import { ProblemModel } from 'src/invoices/abstractions/models/problem.model';
 import { VehicleModel } from 'src/invoices/abstractions/models/vehicle.model';
 import { SurveyorModel } from 'src/surveyor/abstractions/models/surveyor.model';
 import { DataSource } from 'typeorm';
@@ -13,6 +14,7 @@ export class InvoiceSeeder implements Seeder {
 
     const surveyors = await factoryManager.get(SurveyorModel).saveMany(2);
     const vehicles = await factoryManager.get(VehicleModel).saveMany(10);
+    const problems = await factoryManager.get(ProblemModel).saveMany(5);
 
     await invoiceRepository.save(
       await Promise.all(
@@ -32,6 +34,7 @@ export class InvoiceSeeder implements Seeder {
             status,
             surveyor: randomSurveyor,
             vehicle: randomVehicle,
+            problems,
           });
         }),
       ),

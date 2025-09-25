@@ -1,5 +1,6 @@
 import { InvoiceStatus } from '@fullstack-q3/contracts';
 import { InvoiceModel } from '../models/invoice.model';
+import { ProblemModel } from '../models/problem.model';
 
 export abstract class InvoiceRepository {
   abstract count(filters: InvoiceRepository.CountFilters): Promise<number>;
@@ -7,6 +8,7 @@ export abstract class InvoiceRepository {
     filters: InvoiceRepository.FindAllFilters,
   ): Promise<InvoiceRepository.FindAllResponse>;
   abstract detail(id: number): Promise<InvoiceModel>;
+  abstract create(data: InvoiceRepository.CreateData): Promise<void>;
 }
 
 export namespace InvoiceRepository {
@@ -28,5 +30,15 @@ export namespace InvoiceRepository {
   export interface FindAllResponse {
     invoices: InvoiceModel[];
     total: number;
+  }
+
+  export interface CreateData {
+    vehicleId: number;
+    surveyorId: number;
+    problems: Partial<ProblemModel>[];
+    status: InvoiceStatus;
+    price: number;
+    duration: number;
+    observation?: string;
   }
 }

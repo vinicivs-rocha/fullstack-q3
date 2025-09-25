@@ -16,7 +16,7 @@ interface SidebarProps {
 }
 
 const navigation = [
-  { name: "Nova Vistoria", href: "/nova-vistoria", icon: <CheckCircle /> },
+  { name: "Nova Vistoria", href: "/vistorias/nova", icon: <CheckCircle /> },
   { name: "Vistorias", href: "/vistorias", icon: <FileText /> },
   { name: "Veículos", href: "/veiculos", icon: <Car /> },
   { name: "Relatórios", href: "/relatorios", icon: <ChartBar /> },

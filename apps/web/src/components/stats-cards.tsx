@@ -1,12 +1,12 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { InvoicesStats } from "@fullstack-q3/contracts";
+import { InvoicesStatsResponse } from "@fullstack-q3/contracts";
 import { Check, Clock, File, X } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 
 interface StatsCardsProps {
-  stats: InvoicesStats;
+  stats: InvoicesStatsResponse;
   isLoading?: boolean;
 }
 

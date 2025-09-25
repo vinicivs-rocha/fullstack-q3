@@ -1,22 +1,25 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { InvoicesModule } from './invoices/invoices.module';
-import { SurveyorModule } from './surveyor/surveyor.module';
-import { AuthModule } from './auth/auth.module';
-import { CreateSurveyorTable1700000000000 } from './migrations/1700000000000-CreateSurveyorTable';
 import { DataSource } from 'typeorm';
 import { runSeeders } from 'typeorm-extension';
-import { SurveyorSeeder } from './seeds/seeders/surveyor.seeder';
-import { InvoiceSeeder } from './seeds/seeders/invoice.seeder';
-import SurveyorFactory from './seeds/factories/surveyor.factory';
-import VehicleFactory from './seeds/factories/vehicle.factory';
-import InvoiceFactory from './seeds/factories/invoice.factory';
+import { AuthModule } from './auth/auth.module';
+import { InvoicesModule } from './invoices/invoices.module';
+import { CreateSurveyorTable1700000000000 } from './migrations/1700000000000-CreateSurveyorTable';
 import { CreateVehicleTable1758718960773 } from './migrations/1758718960773-CreateVehicleTable';
 import { CreateInvoiceTable1758718973738 } from './migrations/1758718973738-CreateInvoiceTable';
 import { AddNameAndGenderToSurveyorTable1758718978616 } from './migrations/1758718978616-AddNameAndGenderToSurveyorTable';
-import { AddPhoneAndLicenseToSurveyorTable1758719001000 } from './migrations/1758719001000-AddPhoneAndLicenseToSurveyorTable';
 import { AddColorFuelTypeAndMileageToVehicleTable1758719000000 } from './migrations/1758719000000-AddColorFuelTypeAndMileageToVehicleTable';
+import { AddPhoneAndLicenseToSurveyorTable1758719001000 } from './migrations/1758719001000-AddPhoneAndLicenseToSurveyorTable';
+import { CreateProblemTable1758810045611 } from './migrations/1758810045611-CreateProblemTable';
+import { CreateInvoiceProblemTable1758810059425 } from './migrations/1758810059425-CreateInvoiceProblemTable';
+import InvoiceFactory from './seeds/factories/invoice.factory';
+import ProblemFactory from './seeds/factories/problem.factory';
+import SurveyorFactory from './seeds/factories/surveyor.factory';
+import VehicleFactory from './seeds/factories/vehicle.factory';
+import { InvoiceSeeder } from './seeds/seeders/invoice.seeder';
+import { SurveyorSeeder } from './seeds/seeders/surveyor.seeder';
+import { SurveyorModule } from './surveyor/surveyor.module';
 
 @Module({
   imports: [
@@ -39,6 +42,8 @@ import { AddColorFuelTypeAndMileageToVehicleTable1758719000000 } from './migrati
           AddNameAndGenderToSurveyorTable1758718978616,
           AddColorFuelTypeAndMileageToVehicleTable1758719000000,
           AddPhoneAndLicenseToSurveyorTable1758719001000,
+          CreateProblemTable1758810045611,
+          CreateInvoiceProblemTable1758810059425,
         ],
         autoLoadEntities: true,
         migrationsRun: true,
@@ -66,7 +71,12 @@ export class AppModule implements OnModuleInit {
     ) {
       await runSeeders(this.dataSource, {
         seeds: [SurveyorSeeder, InvoiceSeeder],
-        factories: [SurveyorFactory, VehicleFactory, InvoiceFactory],
+        factories: [
+          SurveyorFactory,
+          VehicleFactory,
+          InvoiceFactory,
+          ProblemFactory,
+        ],
       });
     }
   }

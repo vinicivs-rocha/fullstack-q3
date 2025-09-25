@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { DetailedInvoice } from "@fullstack-q3/contracts";
+import { DetailedInvoiceResponse } from "@fullstack-q3/contracts";
 import { 
   Car, 
   Check, 
@@ -22,7 +22,9 @@ import {
   Calendar,
   DollarSign,
   Timer,
-  FileText
+  FileText,
+  AlertTriangle,
+  AlertCircle
 } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 import { forwardRef, useRef, useImperativeHandle } from "react";
@@ -30,7 +32,7 @@ import { forwardRef, useRef, useImperativeHandle } from "react";
 interface InvoiceDetailingModalProps {
   isOpen: boolean;
   onClose: () => void;
-  invoice: DetailedInvoice | undefined;
+  invoice: DetailedInvoiceResponse | undefined;
   isLoading: boolean;
   onDownload: () => void;
 }
@@ -312,6 +314,28 @@ export const InvoiceDetailingModal = forwardRef<InvoiceDetailingModalRef, Invoic
                 </div>
               </div>
             </div>
+
+            {/* Problemas Identificados */}
+            {invoice.problems && invoice.problems.length > 0 && (
+              <div className="border rounded-lg p-4">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-orange-500" />
+                  Problemas Identificados
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {invoice.problems.map((problem) => (
+                    <Badge 
+                      key={problem.id}
+                      variant="destructive"
+                      className="flex items-center gap-1 bg-red-100 text-red-800 border-red-200 hover:bg-red-200"
+                    >
+                      <AlertCircle className="h-3 w-3" />
+                      {problem.label}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Observações */}
             {invoice.observation && (

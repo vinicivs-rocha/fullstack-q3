@@ -1,14 +1,19 @@
 import { InvoiceService } from "@/services/invoices.service";
 import { container } from "@/lib/di-container";
 import { TYPES } from "@/lib/di-types";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect, useRef } from "react";
-import { InvoicesFiltersSchema, InvoiceStatus } from "@fullstack-q3/contracts";
+import { InvoiceCreationData, InvoicesFiltersSchema, InvoiceStatus } from "@fullstack-q3/contracts";
 import { InvoiceDetailingModalRef } from "@/components/invoice-detailing-modal";
 import { toast } from "sonner";
+import { VehicleService } from "@/services/vehicle.service";
+import { ProblemsService } from "@/services/problems.service";
+import { usePathname, useRouter } from "next/navigation";
 
 export const useInvoice = (
-  invoiceService: InvoiceService = container.get(TYPES.InvoiceService)
+  invoiceService: InvoiceService = container.get(TYPES.InvoiceService),
+  problemsService: ProblemsService = container.get(TYPES.ProblemsService),
+  vehicleService: VehicleService = container.get(TYPES.VehicleService),
 ) => {
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<InvoiceStatus | undefined>(undefined);
@@ -20,7 +25,12 @@ export const useInvoice = (
   const [isDetailing, setIsDetailing] = useState(false);
   const [pendingExport, setPendingExport] = useState(false);
   const detailingModalRef = useRef<InvoiceDetailingModalRef | null>(null);
-
+  const pathname = usePathname();
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const [newProblemInput, setNewProblemInput] = useState("");
+  const [isProblemsComboboxOpen, setIsProblemsComboboxOpen] = useState(false);
+  
   const invoicesQuery = useQuery({
     queryKey: ["invoices", page, status, startsAt, endsAt, debouncedSearch],
     queryFn: () => invoiceService.list(InvoicesFiltersSchema.parse({ page, status, start: startsAt, end: endsAt, search: debouncedSearch })),
@@ -39,6 +49,18 @@ export const useInvoice = (
     enabled: typeof window !== "undefined" && !!sessionStorage.getItem("accessToken") && !!invoiceId, 
   });
 
+  const problemsQuery = useQuery({
+    queryKey: ["problems"],
+    queryFn: () => problemsService.list(),
+    enabled: typeof window !== "undefined" && !!sessionStorage.getItem("accessToken") && (pathname === "/vistorias/nova" || pathname.startsWith("/vistorias/editar/")), 
+  });
+
+  const vehiclesQuery = useQuery({
+    queryKey: ["vehicles"],
+    queryFn: () => vehicleService.list(),
+    enabled: typeof window !== "undefined" && !!sessionStorage.getItem("accessToken") && (pathname === "/vistorias/nova" || pathname.startsWith("/vistorias/editar/")), 
+  });
+
   const exportInvoiceMutation = useMutation({
     mutationKey: ["export-invoice", invoiceDetailsQuery.data?.vehicle.plate, invoiceDetailsQuery.data?.id],
     mutationFn: () => {
@@ -55,6 +77,20 @@ export const useInvoice = (
       console.error(error);
       toast.error("Erro ao exportar vistoria");
     }
+  });
+
+  const createInvoiceMutation = useMutation({
+    mutationKey: ["create-invoice"],
+    mutationFn: (data: InvoiceCreationData) => invoiceService.create(data),
+    onSuccess: () => {
+      toast.success("Vistoria criada com sucesso");
+      queryClient.invalidateQueries({ queryKey: ["invoices"] });
+      router.push("/vistorias");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Erro ao criar vistoria");
+    },    
   });
 
   useEffect(() => {
@@ -106,6 +142,13 @@ export const useInvoice = (
       setInvoiceId(id);
       setIsDetailing(true);
       setPendingExport(true);
-    }
+    },
+    problemsQuery,
+    vehiclesQuery,
+    createInvoiceMutation,
+    newProblemInput,
+    setNewProblemInput,
+    isProblemsComboboxOpen,
+    setIsProblemsComboboxOpen,
   };
 };

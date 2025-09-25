@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { InvoiceModel } from 'src/invoices/abstractions/models/invoice.model';
 import { InvoiceRepository } from 'src/invoices/abstractions/repositories/invoice.repository';
+import { ProblemModel } from 'src/invoices/abstractions/models/problem.model';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -9,6 +10,8 @@ export class InvoiceTypeormRepository implements InvoiceRepository {
   constructor(
     @InjectRepository(InvoiceModel)
     private readonly invoiceRepository: Repository<InvoiceModel>,
+    @InjectRepository(ProblemModel)
+    private readonly problemRepository: Repository<ProblemModel>,
   ) {}
 
   async count(filters: InvoiceRepository.CountFilters): Promise<number> {
@@ -121,9 +124,34 @@ export class InvoiceTypeormRepository implements InvoiceRepository {
           phone: true,
           license: true,
         },
+        problems: {
+          id: true,
+          label: true,
+        },
       },
       where: { id },
-      relations: ['vehicle', 'surveyor'],
+      relations: ['vehicle', 'surveyor', 'problems'],
+    });
+  }
+
+  async create(data: InvoiceRepository.CreateData): Promise<void> {
+    await this.invoiceRepository.save({
+      status: data.status,
+      observation: data.observation,
+      price: data.price,
+      duration: data.duration,
+      vehicle: { id: data.vehicleId },
+      surveyor: { id: data.surveyorId },
+      problems: await Promise.all(
+        data.problems.map(async (problem) => {
+          const { id } = problem.id
+            ? { id: problem.id }
+            : await this.problemRepository.save({
+                label: problem.label,
+              });
+          return { id };
+        }),
+      ),
     });
   }
 }
