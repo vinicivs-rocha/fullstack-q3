@@ -141,10 +141,12 @@ export default function VistoriasPage() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => console.log("Editar vistoria:", invoice.id)}
               className="text-gray-400 hover:text-gray-600"
+              asChild
             >
-              <Pencil className="h-4 w-4" />
+              <Link href={`/vistorias/editar/${invoice.id}`}>
+                <Pencil className="h-4 w-4" />
+              </Link>
             </Button>
             <Button
               variant="ghost"

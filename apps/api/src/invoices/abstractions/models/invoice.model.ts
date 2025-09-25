@@ -23,10 +23,26 @@ export class InvoiceModel {
   @Column({ type: 'text', nullable: true })
   observation?: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    transformer: {
+      to: (value: number) => value.toString(),
+      from: (value: string) => parseFloat(value),
+    },
+  })
   price!: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    transformer: {
+      to: (value: number) => value.toString(),
+      from: (value: string) => parseFloat(value),
+    },
+  })
   duration!: number;
 
   @CreateDateColumn()

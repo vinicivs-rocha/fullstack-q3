@@ -30,7 +30,9 @@ export function Sidebar({ user }: SidebarProps) {
       {/* Logo */}
       <div className="flex h-16 items-center px-6 border-b border-gray-200">
         <div className="flex justify-center items-center">
-          <Image src="/company-logo.svg" alt="EPTA TECNOLOGIA" width={157} height={44} />
+          <Link href="/vistorias">
+            <Image src="/company-logo.svg" alt="EPTA TECNOLOGIA" width={157} height={44} />
+          </Link>
         </div>
       </div>
 

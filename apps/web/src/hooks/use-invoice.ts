@@ -3,25 +3,26 @@ import { container } from "@/lib/di-container";
 import { TYPES } from "@/lib/di-types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect, useRef } from "react";
-import { InvoiceCreationData, InvoicesFiltersSchema, InvoiceStatus } from "@fullstack-q3/contracts";
+import { InvoiceCreationData, InvoicesFiltersSchema, InvoiceStatus, InvoiceUpdateData } from "@fullstack-q3/contracts";
 import { InvoiceDetailingModalRef } from "@/components/invoice-detailing-modal";
 import { toast } from "sonner";
 import { VehicleService } from "@/services/vehicle.service";
 import { ProblemsService } from "@/services/problems.service";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useParams } from "next/navigation";
 
 export const useInvoice = (
   invoiceService: InvoiceService = container.get(TYPES.InvoiceService),
   problemsService: ProblemsService = container.get(TYPES.ProblemsService),
   vehicleService: VehicleService = container.get(TYPES.VehicleService),
 ) => {
+  const params = useParams();
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<InvoiceStatus | undefined>(undefined);
   const [startsAt, setStartsAt] = useState<string | undefined>(undefined);
   const [endsAt, setEndsAt] = useState<string | undefined>(undefined);
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [debouncedSearch, setDebouncedSearch] = useState<string | undefined>(undefined);
-  const [invoiceId, setInvoiceId] = useState<number | undefined>(undefined);
+  const [invoiceId, setInvoiceId] = useState<number | undefined>(params.id ? parseInt(params.id as string) : undefined);
   const [isDetailing, setIsDetailing] = useState(false);
   const [pendingExport, setPendingExport] = useState(false);
   const detailingModalRef = useRef<InvoiceDetailingModalRef | null>(null);
@@ -34,13 +35,13 @@ export const useInvoice = (
   const invoicesQuery = useQuery({
     queryKey: ["invoices", page, status, startsAt, endsAt, debouncedSearch],
     queryFn: () => invoiceService.list(InvoicesFiltersSchema.parse({ page, status, start: startsAt, end: endsAt, search: debouncedSearch })),
-    enabled: typeof window !== "undefined" && !!sessionStorage.getItem("accessToken"), 
+    enabled: typeof window !== "undefined" && !!sessionStorage.getItem("accessToken") && pathname === "/vistorias", 
   });
 
   const statsQuery = useQuery({
     queryKey: ["invoices-stats", startsAt, endsAt],
     queryFn: () => invoiceService.stats(InvoicesFiltersSchema.parse({ start: startsAt, end: endsAt })),
-    enabled: typeof window !== "undefined" && !!sessionStorage.getItem("accessToken"), 
+    enabled: typeof window !== "undefined" && !!sessionStorage.getItem("accessToken") && pathname === "/vistorias", 
   });
 
   const invoiceDetailsQuery = useQuery({
@@ -91,6 +92,20 @@ export const useInvoice = (
       console.error(error);
       toast.error("Erro ao criar vistoria");
     },    
+  });
+
+  const updateInvoiceMutation = useMutation({
+    mutationKey: ["update-invoice"],
+    mutationFn: ({id, ...data}: InvoiceUpdateData & {id: number}) => invoiceService.update(id, data),
+    onSuccess: () => {
+      toast.success("Vistoria atualizada com sucesso");
+      queryClient.invalidateQueries({ queryKey: ["invoices"] });
+      router.push("/vistorias");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Erro ao atualizar vistoria");
+    },
   });
 
   useEffect(() => {
@@ -150,5 +165,9 @@ export const useInvoice = (
     setNewProblemInput,
     isProblemsComboboxOpen,
     setIsProblemsComboboxOpen,
+    updateInvoice: (data: InvoiceUpdateData) => {
+      updateInvoiceMutation.mutate({ id: invoiceId!, ...data });
+    },
+    updateInvoiceMutation,
   };
 };

@@ -93,3 +93,17 @@ export const InvoiceCreationDataSchema = z.object({
 });
 
 export type InvoiceCreationData = z.infer<typeof InvoiceCreationDataSchema>;
+
+export const InvoiceUpdateDataSchema = z.object({
+  vehicleId: z.number(),
+  problems: z.array(z.object({
+    id: z.number().optional(),
+    label: z.string().optional(),
+  })),
+  status: InvoiceStatusSchema,
+  price: z.number(),
+  duration: z.number(),
+  observation: z.string().optional(),
+});
+
+export type InvoiceUpdateData = z.infer<typeof InvoiceUpdateDataSchema>;

@@ -4,6 +4,7 @@ import {
   InvoicesListResponse,
   InvoicesStatsResponse,
   type InvoicesFilters,
+  type InvoiceUpdateData,
 } from '@fullstack-q3/contracts';
 import {
   Controller,
@@ -11,8 +12,10 @@ import {
   Inject,
   Param,
   Post,
+  Put,
   Query,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { SurveyorJwtGuard } from 'src/auth/api/guards/surveyor.jwt.guard';
 import { InvoiceRepository } from 'src/invoices/abstractions/repositories/invoice.repository';
@@ -92,6 +95,23 @@ export class InvoicesController {
     await this.invoiceRepository.create({
       vehicleId: data.vehicleId,
       surveyorId: user.id,
+      problems: data.problems,
+      status: data.status,
+      price: data.price,
+      duration: data.duration,
+      observation: data.observation,
+    });
+  }
+
+  @UseGuards(SurveyorJwtGuard)
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: InvoiceUpdateData,
+  ): Promise<void> {
+    await this.invoiceRepository.update({
+      id,
+      vehicleId: data.vehicleId,
       problems: data.problems,
       status: data.status,
       price: data.price,

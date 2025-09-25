@@ -154,4 +154,26 @@ export class InvoiceTypeormRepository implements InvoiceRepository {
       ),
     });
   }
+
+  async update(data: InvoiceRepository.UpdateData): Promise<void> {
+    console.log(data);
+    await this.invoiceRepository.save({
+      id: data.id,
+      observation: data.observation,
+      price: data.price,
+      duration: data.duration,
+      status: data.status,
+      vehicle: { id: data.vehicleId },
+      problems: await Promise.all(
+        data.problems.map(async (problem) => {
+          const { id } = problem.id
+            ? { id: problem.id }
+            : await this.problemRepository.save({
+                label: problem.label,
+              });
+          return { id };
+        }),
+      ),
+    });
+  }
 }

@@ -9,6 +9,7 @@ export abstract class InvoiceRepository {
   ): Promise<InvoiceRepository.FindAllResponse>;
   abstract detail(id: number): Promise<InvoiceModel>;
   abstract create(data: InvoiceRepository.CreateData): Promise<void>;
+  abstract update(data: InvoiceRepository.UpdateData): Promise<void>;
 }
 
 export namespace InvoiceRepository {
@@ -35,6 +36,16 @@ export namespace InvoiceRepository {
   export interface CreateData {
     vehicleId: number;
     surveyorId: number;
+    problems: Partial<ProblemModel>[];
+    status: InvoiceStatus;
+    price: number;
+    duration: number;
+    observation?: string;
+  }
+
+  export interface UpdateData {
+    id: number;
+    vehicleId: number;
     problems: Partial<ProblemModel>[];
     status: InvoiceStatus;
     price: number;

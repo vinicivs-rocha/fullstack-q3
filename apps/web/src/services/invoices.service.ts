@@ -5,6 +5,7 @@ import {
     InvoicesStatsResponse,
     InvoicesListResponse,
     InvoiceCreationData,
+    InvoiceUpdateData,
 } from "@fullstack-q3/contracts";
 import { Axios } from "axios";
 import { inject, injectable } from "inversify";
@@ -94,5 +95,9 @@ export class InvoiceService {
 
     async create(data: InvoiceCreationData): Promise<void> {
         await this.httpClient.post('/invoices', data);
+    }
+
+    async update(id: number, data: InvoiceUpdateData): Promise<void> {
+        await this.httpClient.put(`/invoices/${id}`, data);
     }
 }
