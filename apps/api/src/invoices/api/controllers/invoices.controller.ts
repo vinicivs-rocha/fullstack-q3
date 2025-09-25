@@ -29,15 +29,24 @@ export class InvoicesController {
   @Get('stats')
   async getStats(@Query() filters: InvoicesFilters): Promise<InvoicesStats> {
     return {
-      total: await this.invoiceRepository.count(filters),
+      total: await this.invoiceRepository.count({
+        start: filters.start,
+        end: filters.end,
+      }),
       pending: await this.invoiceRepository.count({
         status: 'PENDENTE',
+        start: filters.start,
+        end: filters.end,
       }),
       approved: await this.invoiceRepository.count({
         status: 'APROVADA',
+        start: filters.start,
+        end: filters.end,
       }),
       rejected: await this.invoiceRepository.count({
         status: 'REPROVADA',
+        start: filters.start,
+        end: filters.end,
       }),
     };
   }

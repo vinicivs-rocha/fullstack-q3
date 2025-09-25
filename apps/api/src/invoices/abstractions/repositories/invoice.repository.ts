@@ -12,6 +12,8 @@ export abstract class InvoiceRepository {
 export namespace InvoiceRepository {
   export interface CountFilters {
     status?: InvoiceStatus;
+    start?: Date;
+    end?: Date;
   }
 
   export interface FindAllFilters {

@@ -12,11 +12,27 @@ export class InvoiceTypeormRepository implements InvoiceRepository {
   ) {}
 
   async count(filters: InvoiceRepository.CountFilters): Promise<number> {
-    return this.invoiceRepository.count({
-      where: {
+    const qb = this.invoiceRepository.createQueryBuilder('invoice');
+
+    if (filters.status) {
+      qb.andWhere('invoice.status = :status', {
         status: filters.status,
-      },
-    });
+      });
+    }
+
+    if (filters.start) {
+      qb.andWhere('date(invoice.createdAt) >= date(:start)', {
+        start: filters.start,
+      });
+    }
+
+    if (filters.end) {
+      qb.andWhere('date(invoice.createdAt) <= date(:end)', {
+        end: filters.end,
+      });
+    }
+
+    return qb.getCount();
   }
 
   async findAll(

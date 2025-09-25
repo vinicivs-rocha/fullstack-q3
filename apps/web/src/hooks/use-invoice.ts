@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState, useEffect, useRef } from "react";
 import { InvoicesFiltersSchema, InvoiceStatus } from "@fullstack-q3/contracts";
 import { InvoiceDetailingModalRef } from "@/components/invoice-detailing-modal";
+import { toast } from "sonner";
 
 export const useInvoice = (
   invoiceService: InvoiceService = container.get(TYPES.InvoiceService)
@@ -45,10 +46,14 @@ export const useInvoice = (
     },
     onSuccess: () => {
       setIsDetailing(false);
-      setInvoiceId(undefined);
+      setTimeout(() => {
+        setInvoiceId(undefined);
+      }, 250);
+      toast.success("Vistoria exportada com sucesso");
     },
     onError: (error) => {
       console.error(error);
+      toast.error("Erro ao exportar vistoria");
     }
   });
 
@@ -90,7 +95,9 @@ export const useInvoice = (
     invoiceDetailsQuery,
     stopDetailing: () => {
       setIsDetailing(false);
-      setInvoiceId(undefined);
+      setTimeout(() => {
+        setInvoiceId(undefined);
+      }, 250);
     },
     isDetailing,
     exportInvoiceMutation,
