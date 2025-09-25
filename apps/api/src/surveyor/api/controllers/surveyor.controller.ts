@@ -21,6 +21,7 @@ export class SurveyorController {
     return {
       id: surveyor.id,
       email: surveyor.email,
+      name: surveyor.name,
     };
   }
 }

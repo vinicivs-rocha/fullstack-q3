@@ -23,6 +23,7 @@ export const RefreshTokenResponseSchema = z.object({
 export const MeResponseSchema = z.object({
   id: z.number(),
   email: z.string(),
+  name: z.string(),
 });
 
 export type SignInData = z.infer<typeof SignInSchema>;

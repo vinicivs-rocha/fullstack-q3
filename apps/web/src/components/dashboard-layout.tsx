@@ -27,7 +27,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   const user = {
-    name: meQuery.data?.email?.split('@')[0] || "Usuário",
+    name: meQuery.data?.name || "Usuário",
     email: meQuery.data?.email || "",
     gender: "M",
   };

@@ -17,6 +17,7 @@ export class SurveyorTypeormRepository implements SurveyorRepository {
       select: {
         id: true,
         email: true,
+        name: true,
       },
     });
   }
