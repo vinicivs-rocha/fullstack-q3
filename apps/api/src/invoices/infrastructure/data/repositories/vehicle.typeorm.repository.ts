@@ -211,4 +211,11 @@ export class VehicleTypeormRepository implements VehicleRepository {
   async create(data: VehicleRepository.CreateData): Promise<void> {
     await this.vehicleRepository.save(data);
   }
+
+  async update(id: number, data: VehicleRepository.UpdateData): Promise<void> {
+    await this.vehicleRepository.save({
+      id,
+      ...data,
+    });
+  }
 }

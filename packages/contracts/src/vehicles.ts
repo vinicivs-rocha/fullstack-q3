@@ -82,6 +82,21 @@ export const VehicleCreationDataSchema = z.object({
   }),
 });
 
+export const VehicleUpdatingDataSchema = z.object({
+  plate: z.string(),
+  model: z.string(),
+  brand: z.string(),
+  year: z.number(),
+  color: z.string(),
+  fuelType: FuelTypeSchema,
+  mileage: z.number().optional(),
+  chassisNumber: z.string(),
+  proprietary: z.object({
+    name: z.string(),
+    email: z.string(),
+  }),
+});
+
 export type VehicleStatus = z.infer<typeof VehicleStatusSchema>;
 export type VehicleListResponse = z.infer<typeof VehicleListResponseSchema>;
 export type VehicleCountsResponse = z.infer<typeof VehicleCountsResponseSchema>;
@@ -95,3 +110,4 @@ export type VehiclePaginatedListFilters = z.infer<
 >;
 export type VehicleDetailsResponse = z.infer<typeof VehicleDetailsResponseSchema>;
 export type VehicleCreationData = z.infer<typeof VehicleCreationDataSchema>;
+export type VehicleUpdatingData = z.infer<typeof VehicleUpdatingDataSchema>;

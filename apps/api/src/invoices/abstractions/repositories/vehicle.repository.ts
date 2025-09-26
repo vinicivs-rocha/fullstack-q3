@@ -11,6 +11,10 @@ export abstract class VehicleRepository {
   ): Promise<VehicleRepository.PaginatedListOutput>;
   abstract detail(id: number): Promise<VehicleModel>;
   abstract create(data: VehicleRepository.CreateData): Promise<void>;
+  abstract update(
+    id: number,
+    data: VehicleRepository.UpdateData,
+  ): Promise<void>;
 }
 
 export namespace VehicleRepository {
@@ -33,6 +37,21 @@ export namespace VehicleRepository {
   }
 
   export interface CreateData {
+    plate: string;
+    year: number;
+    brand: string;
+    model: string;
+    color: string;
+    fuelType: FuelType;
+    mileage?: number;
+    chassis: string;
+    proprietary: {
+      name: string;
+      email: string;
+    };
+  }
+
+  export interface UpdateData {
     plate: string;
     year: number;
     brand: string;

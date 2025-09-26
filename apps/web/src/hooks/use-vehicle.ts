@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { VehicleService } from "@/services/vehicle.service";
 import { container } from "@/lib/di-container";
 import { TYPES } from "@/lib/di-types";
-import { VehicleCreationData, VehiclePaginatedListFiltersSchema, VehicleStatus } from "@fullstack-q3/contracts";
+import { VehicleCreationData, VehicleCreationDataSchema, VehiclePaginatedListFiltersSchema, VehicleStatus, VehicleUpdatingData, VehicleUpdatingDataSchema } from "@fullstack-q3/contracts";
 import { useEffect, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
 import { useParams, useRouter } from "next/navigation";
@@ -54,7 +54,7 @@ export const useVehicle = (
 
   const vehicleCreateMutation = useMutation({
     mutationKey: ['vehicle-create'],
-    mutationFn: (vehicle: VehicleCreationData) => vehicleService.create(vehicle),
+    mutationFn: (vehicle: VehicleCreationData) => vehicleService.create(VehicleCreationDataSchema.parse(vehicle)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vehicles-paginated-list'] });
       queryClient.invalidateQueries({ queryKey: ['vehicles-counts'] });
@@ -66,6 +66,23 @@ export const useVehicle = (
     onError: (error) => {
       console.error(error);
       toast.error('Erro ao criar veículo');
+    }
+  });
+
+  const vehicleUpdateMutation = useMutation({
+    mutationKey: ['vehicle-update'],
+    mutationFn: ({id, ...vehicle}: VehicleUpdatingData & {id: number}) => vehicleService.update(id, VehicleUpdatingDataSchema.parse(vehicle)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['vehicles-paginated-list'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicles-counts'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicles-years'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicles-brands'] });
+      toast.success('Veículo atualizado com sucesso');
+      router.push("/veiculos");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error('Erro ao atualizar veículo');
     }
   });
 
@@ -111,5 +128,6 @@ export const useVehicle = (
     search,
     setSearch,
     create: (vehicle: VehicleCreationData) => vehicleCreateMutation.mutate(vehicle),
+    update: (id: number, vehicle: VehicleUpdatingData) => vehicleUpdateMutation.mutate({id, ...vehicle}),
   };
 };

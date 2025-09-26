@@ -3,7 +3,7 @@ import { container } from "@/lib/di-container";
 import { TYPES } from "@/lib/di-types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect, useRef } from "react";
-import { InvoiceCreationData, InvoicesFiltersSchema, InvoiceStatus, InvoiceUpdateData } from "@fullstack-q3/contracts";
+import { InvoiceCreationData, InvoiceCreationDataSchema, InvoicesFiltersSchema, InvoiceStatus, InvoiceUpdateData, InvoiceUpdateDataSchema } from "@fullstack-q3/contracts";
 import { InvoiceDetailingModalRef } from "@/components/invoice-detailing-modal";
 import { toast } from "sonner";
 import { VehicleService } from "@/services/vehicle.service";
@@ -82,7 +82,7 @@ export const useInvoice = (
 
   const createInvoiceMutation = useMutation({
     mutationKey: ["create-invoice"],
-    mutationFn: (data: InvoiceCreationData) => invoiceService.create(data),
+    mutationFn: (data: InvoiceCreationData) => invoiceService.create(InvoiceCreationDataSchema.parse(data)),
     onSuccess: () => {
       toast.success("Vistoria criada com sucesso");
       queryClient.invalidateQueries({ queryKey: ["invoices"] });
@@ -96,7 +96,7 @@ export const useInvoice = (
 
   const updateInvoiceMutation = useMutation({
     mutationKey: ["update-invoice"],
-    mutationFn: ({id, ...data}: InvoiceUpdateData & {id: number}) => invoiceService.update(id, data),
+    mutationFn: ({id, ...data}: InvoiceUpdateData & {id: number}) => invoiceService.update(id, InvoiceUpdateDataSchema.parse(data)),
     onSuccess: () => {
       toast.success("Vistoria atualizada com sucesso");
       queryClient.invalidateQueries({ queryKey: ["invoices"] });

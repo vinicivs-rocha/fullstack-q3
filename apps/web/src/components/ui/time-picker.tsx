@@ -11,7 +11,7 @@ import { ChevronDown, ChevronUp, Clock } from "lucide-react";
 import { forwardRef, useState } from "react";
 
 interface TimePickerProps {
-  value?: number; // duração em minutos
+  value?: number;
   onChange?: (minutes: number) => void;
   placeholder?: string;
   className?: string;
@@ -22,11 +22,9 @@ export const TimePicker = forwardRef<HTMLButtonElement, TimePickerProps>(
   ({ value, onChange, placeholder = "Selecione a duração", className, disabled }, ref) => {
     const [open, setOpen] = useState(false);
     
-    // Converter minutos para horas e minutos
     const hours = Math.floor((value || 0) / 60);
     const minutes = (value || 0) % 60;
     
-    // Formatar para exibição
     const formatTime = (totalMinutes: number) => {
       if (totalMinutes === 0) return "";
       const h = Math.floor(totalMinutes / 60);

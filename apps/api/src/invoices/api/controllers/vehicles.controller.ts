@@ -6,6 +6,7 @@ import {
   VehicleListResponse,
   type VehiclePaginatedListFilters,
   VehiclePaginatedListResponse,
+  type VehicleUpdatingData,
   VehicleYearsResponse,
 } from '@fullstack-q3/contracts';
 import {
@@ -14,8 +15,10 @@ import {
   Get,
   Inject,
   Param,
+  ParseIntPipe,
   Post,
   Query,
+  Put,
 } from '@nestjs/common';
 import { VehicleRepository } from 'src/invoices/abstractions/repositories/vehicle.repository';
 import { VehicleTypeormRepository } from 'src/invoices/infrastructure/data/repositories/vehicle.typeorm.repository';
@@ -98,6 +101,27 @@ export class VehiclesController {
         name: data.proprietary.name,
         email: data.proprietary.email,
       },
+    });
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: VehicleUpdatingData,
+  ): Promise<void> {
+    return this.vehicleRepository.update(id, {
+      plate: data.plate,
+      model: data.model,
+      brand: data.brand,
+      year: data.year,
+      color: data.color,
+      fuelType: data.fuelType,
+      chassis: data.chassisNumber,
+      proprietary: {
+        name: data.proprietary.name,
+        email: data.proprietary.email,
+      },
+      mileage: data.mileage,
     });
   }
 }
