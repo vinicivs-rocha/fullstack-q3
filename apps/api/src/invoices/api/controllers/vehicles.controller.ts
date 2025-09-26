@@ -19,6 +19,7 @@ import {
   Post,
   Query,
   Put,
+  Delete,
 } from '@nestjs/common';
 import { VehicleRepository } from 'src/invoices/abstractions/repositories/vehicle.repository';
 import { VehicleTypeormRepository } from 'src/invoices/infrastructure/data/repositories/vehicle.typeorm.repository';
@@ -123,5 +124,10 @@ export class VehiclesController {
       },
       mileage: data.mileage,
     });
+  }
+
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.vehicleRepository.delete(id);
   }
 }

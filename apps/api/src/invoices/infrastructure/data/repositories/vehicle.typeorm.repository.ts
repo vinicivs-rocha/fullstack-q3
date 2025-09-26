@@ -218,4 +218,8 @@ export class VehicleTypeormRepository implements VehicleRepository {
       ...data,
     });
   }
+
+  async delete(id: number): Promise<void> {
+    await this.vehicleRepository.delete(id);
+  }
 }

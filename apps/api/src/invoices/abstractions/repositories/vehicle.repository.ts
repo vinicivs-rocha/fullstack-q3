@@ -15,6 +15,7 @@ export abstract class VehicleRepository {
     id: number,
     data: VehicleRepository.UpdateData,
   ): Promise<void>;
+  abstract delete(id: number): Promise<void>;
 }
 
 export namespace VehicleRepository {

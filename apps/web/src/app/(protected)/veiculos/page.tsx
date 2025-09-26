@@ -32,6 +32,7 @@ export default function VeiculosPage() {
     stopDetailing,
     vehicleDetailsQuery,
     isDetailing,
+    delete: deleteVehicle,
   } = useVehicle();
 
   // Configuração das colunas da tabela
@@ -140,7 +141,12 @@ export default function VeiculosPage() {
                 <Pencil className="h-4 w-4" />
               </Link>
             </Button>
-            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-600">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-gray-400 hover:text-gray-600"
+              onClick={() => deleteVehicle(vehicle.id)}
+            >
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>

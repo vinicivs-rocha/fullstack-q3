@@ -86,6 +86,23 @@ export const useVehicle = (
     }
   });
 
+  const vehicleDeleteMutation = useMutation({
+    mutationKey: ['vehicle-delete'],
+    mutationFn: (id: number) => vehicleService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['vehicles-paginated-list'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicles-counts'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicles-years'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicles-brands'] });
+      toast.success('Veículo deletado com sucesso');
+      router.push("/veiculos");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error('Erro ao deletar veículo');
+    }
+  });
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
@@ -129,5 +146,6 @@ export const useVehicle = (
     setSearch,
     create: (vehicle: VehicleCreationData) => vehicleCreateMutation.mutate(vehicle),
     update: (id: number, vehicle: VehicleUpdatingData) => vehicleUpdateMutation.mutate({id, ...vehicle}),
+    delete: (id: number) => vehicleDeleteMutation.mutate(id),
   };
 };
