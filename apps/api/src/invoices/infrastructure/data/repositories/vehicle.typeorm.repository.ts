@@ -178,4 +178,33 @@ export class VehicleTypeormRepository implements VehicleRepository {
       total,
     };
   }
+
+  async detail(id: number): Promise<VehicleModel> {
+    return this.vehicleRepository.findOneOrFail({
+      select: {
+        id: true,
+        plate: true,
+        model: true,
+        brand: true,
+        year: true,
+        chassis: true,
+        proprietary: {
+          name: true,
+          email: true,
+        },
+        color: true,
+        fuelType: true,
+        mileage: true,
+        createdAt: true,
+        invoices: {
+          id: true,
+          status: true,
+          createdAt: true,
+          price: true,
+        },
+      },
+      where: { id },
+      relations: ['invoices'],
+    });
+  }
 }

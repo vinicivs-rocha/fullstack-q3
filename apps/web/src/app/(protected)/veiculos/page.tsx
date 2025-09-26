@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { VehiclesSearch } from "@/components/vehicles-search";
 import { VehicleStatsCards } from "@/components/vehicles-stats-cards";
+import { VehicleDetailingModal } from "@/components/vehicle-detailing-modal";
 import { useVehicle } from "@/hooks/use-vehicle";
 import { VehiclePaginatedListResponse } from "@fullstack-q3/contracts";
 import { Row } from "@tanstack/react-table";
@@ -27,6 +28,10 @@ export default function VeiculosPage() {
     setBrand,
     search,
     setSearch,
+    detail,
+    stopDetailing,
+    vehicleDetailsQuery,
+    isDetailing,
   } = useVehicle();
 
   // Configuração das colunas da tabela
@@ -114,13 +119,26 @@ export default function VeiculosPage() {
       id: "actions",
       header: "Ações",
       cell: ({ row }: { row: Row<VehiclePaginatedListResponse['vehicles'][number]> }) => {
+        const vehicle = row.original;
         return (
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-600">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-gray-400 hover:text-gray-600"
+              onClick={() => detail(vehicle.id)}
+            >
               <Eye className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-600">
-              <Pencil className="h-4 w-4" />
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-gray-400 hover:text-gray-600"
+              asChild
+            >
+              <Link href={`/veiculos/editar/${vehicle.id}`}>
+                <Pencil className="h-4 w-4" />
+              </Link>
             </Button>
             <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-600">
               <Trash2 className="h-4 w-4" />
@@ -203,6 +221,14 @@ export default function VeiculosPage() {
           />
         </div>
       </div>
+
+      {/* Modal de Detalhes */}
+      <VehicleDetailingModal
+        isOpen={isDetailing}
+        onClose={stopDetailing}
+        vehicle={vehicleDetailsQuery.data}
+        isLoading={vehicleDetailsQuery.isLoading}
+      />
     </>
   );
 } 

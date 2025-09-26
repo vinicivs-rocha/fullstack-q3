@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "@/lib/di-types";
 import { Axios } from "axios";
-import { VehicleBrandsResponse, VehicleCountsResponse, VehicleListResponse, VehiclePaginatedListFilters, VehiclePaginatedListResponse, VehicleYearsResponse } from "@fullstack-q3/contracts"; 
+import { VehicleBrandsResponse, VehicleCountsResponse, VehicleDetailsResponse, VehicleListResponse, VehiclePaginatedListFilters, VehiclePaginatedListResponse, VehicleYearsResponse } from "@fullstack-q3/contracts"; 
 
 @injectable()   
 export class VehicleService {
@@ -41,5 +41,12 @@ export class VehicleService {
       '/vehicles/counts',
     );
     return response.data;
-  } 
+  }
+  
+  async detail(id: number): Promise<VehicleDetailsResponse> {
+    const response = await this.httpClient.get<VehicleDetailsResponse>(
+      `/vehicles/${id}`,
+    );
+    return response.data;
+  }
 }

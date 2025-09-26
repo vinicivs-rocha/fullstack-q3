@@ -9,6 +9,7 @@ export abstract class VehicleRepository {
   abstract paginatedList(
     filters: VehicleRepository.PaginatedListFilters,
   ): Promise<VehicleRepository.PaginatedListOutput>;
+  abstract detail(id: number): Promise<VehicleModel>;
 }
 
 export namespace VehicleRepository {
