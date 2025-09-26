@@ -207,4 +207,8 @@ export class VehicleTypeormRepository implements VehicleRepository {
       relations: ['invoices'],
     });
   }
+
+  async create(data: VehicleRepository.CreateData): Promise<void> {
+    await this.vehicleRepository.save(data);
+  }
 }

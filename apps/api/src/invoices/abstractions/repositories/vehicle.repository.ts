@@ -1,4 +1,4 @@
-import { VehicleStatus } from '@fullstack-q3/contracts';
+import { FuelType, VehicleStatus } from '@fullstack-q3/contracts';
 import { VehicleModel } from '../models/vehicle.model';
 
 export abstract class VehicleRepository {
@@ -10,6 +10,7 @@ export abstract class VehicleRepository {
     filters: VehicleRepository.PaginatedListFilters,
   ): Promise<VehicleRepository.PaginatedListOutput>;
   abstract detail(id: number): Promise<VehicleModel>;
+  abstract create(data: VehicleRepository.CreateData): Promise<void>;
 }
 
 export namespace VehicleRepository {
@@ -29,5 +30,20 @@ export namespace VehicleRepository {
   export interface PaginatedListOutput {
     vehicles: VehicleModel[];
     total: number;
+  }
+
+  export interface CreateData {
+    plate: string;
+    year: number;
+    brand: string;
+    model: string;
+    color: string;
+    fuelType: FuelType;
+    mileage?: number;
+    chassis: string;
+    proprietary: {
+      name: string;
+      email: string;
+    };
   }
 }

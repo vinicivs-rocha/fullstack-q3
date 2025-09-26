@@ -1,16 +1,19 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { VehicleService } from "@/services/vehicle.service";
 import { container } from "@/lib/di-container";
 import { TYPES } from "@/lib/di-types";
-import { VehiclePaginatedListFiltersSchema, VehicleStatus } from "@fullstack-q3/contracts";
+import { VehicleCreationData, VehiclePaginatedListFiltersSchema, VehicleStatus } from "@fullstack-q3/contracts";
 import { useEffect, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export const useVehicle = (
     vehicleService: VehicleService = container.get(TYPES.VehicleService),
 ) => {
   const { id } = useParams();
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -47,6 +50,23 @@ export const useVehicle = (
     queryKey: ['vehicle-detail', vehicleId],
     queryFn: () => vehicleService.detail(vehicleId!),
     enabled: !!vehicleId,
+  });
+
+  const vehicleCreateMutation = useMutation({
+    mutationKey: ['vehicle-create'],
+    mutationFn: (vehicle: VehicleCreationData) => vehicleService.create(vehicle),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['vehicles-paginated-list'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicles-counts'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicles-years'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicles-brands'] });
+      toast.success('Veículo criado com sucesso');
+      router.push("/veiculos");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error('Erro ao criar veículo');
+    }
   });
 
   useEffect(() => {
@@ -90,5 +110,6 @@ export const useVehicle = (
     setBrand,
     search,
     setSearch,
+    create: (vehicle: VehicleCreationData) => vehicleCreateMutation.mutate(vehicle),
   };
 };

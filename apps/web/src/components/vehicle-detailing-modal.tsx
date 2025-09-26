@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { VehicleDetailsResponse } from "@fullstack-q3/contracts";
+import { FuelType, VehicleDetailsResponse } from "@fullstack-q3/contracts";
 import {
   Calendar,
   Car,
@@ -44,6 +44,25 @@ export const VehicleDetailingModal = ({
       currency: 'BRL'
     }).format(value);
   };
+
+  const getFuelType = (fuelType: FuelType) => {
+    switch (fuelType) {
+      case "GASOLINA":
+        return "Gasolina";
+      case "ETANOL":
+        return "Etanol";
+      case "FLEX":
+        return "Flex";
+      case "DIESEL":
+        return "Diesel";
+      case "ELETRICO":
+        return "Elétrico";
+      case "HIBRIDO":
+        return "Híbrido";
+      default:
+        return fuelType;
+    }
+  }
 
   if (isLoading) {
     return (
@@ -229,7 +248,7 @@ export const VehicleDetailingModal = ({
                 <label className="text-sm font-medium text-gray-500">Combustível</label>
                 <div className="flex items-center gap-2">
                   <Fuel className="h-4 w-4 text-gray-400" />
-                  <p className="text-sm">{vehicle.fuelType}</p>
+                  <p className="text-sm">{getFuelType(vehicle.fuelType)}</p>
                 </div>
               </div>
               {vehicle.mileage && (

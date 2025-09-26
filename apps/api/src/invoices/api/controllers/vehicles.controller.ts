@@ -1,13 +1,22 @@
 import {
   VehicleBrandsResponse,
   VehicleCountsResponse,
+  type VehicleCreationData,
   VehicleDetailsResponse,
   VehicleListResponse,
   type VehiclePaginatedListFilters,
   VehiclePaginatedListResponse,
   VehicleYearsResponse,
 } from '@fullstack-q3/contracts';
-import { Controller, Get, Inject, Param, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { VehicleRepository } from 'src/invoices/abstractions/repositories/vehicle.repository';
 import { VehicleTypeormRepository } from 'src/invoices/infrastructure/data/repositories/vehicle.typeorm.repository';
 import { ListVehiclesPresenter } from '../presenters/list-vehicles.presenter';
@@ -73,5 +82,22 @@ export class VehiclesController {
     return DetailVehiclePresenter.toHTTP(
       await this.vehicleRepository.detail(id),
     );
+  }
+
+  @Post()
+  async create(@Body() data: VehicleCreationData): Promise<void> {
+    return this.vehicleRepository.create({
+      plate: data.plate,
+      model: data.model,
+      brand: data.brand,
+      year: data.year,
+      color: data.color,
+      fuelType: data.fuelType,
+      chassis: data.chassisNumber,
+      proprietary: {
+        name: data.proprietary.name,
+        email: data.proprietary.email,
+      },
+    });
   }
 }
