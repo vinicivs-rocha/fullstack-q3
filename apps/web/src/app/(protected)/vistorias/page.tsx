@@ -258,7 +258,7 @@ export default function VistoriasPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-hidden p-4 sm:p-6">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6">
         <div className="h-full flex flex-col">
           {/* Search and Filters */}
           <InvoicesSearch
