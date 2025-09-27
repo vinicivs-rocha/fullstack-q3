@@ -36,6 +36,25 @@ export function BrandsList({ data, isLoading = false }: BrandsListProps) {
     );
   }
 
+  if (!data || data.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Marcas Mais Vistoriadas</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <Car className="h-12 w-12 text-gray-300 mb-4" />
+            <p className="text-gray-500 text-sm">Nenhuma vistoria encontrada</p>
+            <p className="text-gray-400 text-xs mt-1">
+              Tente ajustar os filtros
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
