@@ -2,6 +2,7 @@
 
 import { Sidebar } from "@/components/sidebar";
 import { useAuth } from "@/hooks/use-auth";
+import { useState } from "react";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -9,6 +10,7 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { meQuery, logOut } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
 
   if (meQuery.isLoading) {
     return (
@@ -36,7 +38,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar user={user} onLogOut={logOut} />
+      <Sidebar
+        user={user}
+        onLogOut={logOut}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onOpen={() => setIsOpen(true)}
+      />
       <div className="flex-1 flex flex-col overflow-hidden">{children}</div>
     </div>
   );

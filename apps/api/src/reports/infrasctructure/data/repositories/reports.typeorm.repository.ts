@@ -258,9 +258,6 @@ export class ReportsTypeormRepository implements ReportsRepository {
       .groupBy('surveyor.id')
       .getRawMany<{ surveyorId: number; count: string }>();
 
-    console.log(invoices);
-    console.log(approvedInvoices);
-
     return invoices.map((invoice) => ({
       surveyor: {
         id: invoice.surveyorId,

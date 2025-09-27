@@ -85,20 +85,25 @@ export const TimePicker = forwardRef<HTMLButtonElement, TimePickerProps>(
             ref={ref}
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal",
+              "w-full justify-start text-left font-normal truncate",
               !value && "text-muted-foreground",
               className,
             )}
             disabled={disabled}
           >
-            <Clock className="mr-2 h-4 w-4" />
+            <Clock className="mr-2 h-4 w-4 flex-shrink-0" />
             {value ? formatTime(value) : placeholder}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 p-4" align="start">
+        <PopoverContent
+          className="w-auto min-w-80 max-w-[90vw] p-4"
+          align="start"
+          side="bottom"
+          sideOffset={4}
+        >
           <div className="space-y-4">
             {/* Seletores de hora e minuto */}
-            <div className="flex items-center justify-center space-x-6">
+            <div className="flex items-center justify-center space-x-4 sm:space-x-6">
               {/* Horas */}
               <div className="flex flex-col items-center space-y-2">
                 <Button
@@ -110,7 +115,7 @@ export const TimePicker = forwardRef<HTMLButtonElement, TimePickerProps>(
                 >
                   <ChevronUp className="h-4 w-4" />
                 </Button>
-                <div className="text-2xl font-mono font-bold min-w-[3rem] text-center">
+                <div className="text-xl sm:text-2xl font-mono font-bold min-w-[2.5rem] sm:min-w-[3rem] text-center">
                   {hours.toString().padStart(2, "0")}
                 </div>
                 <Button
@@ -125,7 +130,7 @@ export const TimePicker = forwardRef<HTMLButtonElement, TimePickerProps>(
                 <div className="text-xs text-muted-foreground">horas</div>
               </div>
 
-              <div className="text-2xl font-bold">:</div>
+              <div className="text-xl sm:text-2xl font-bold">:</div>
 
               {/* Minutos */}
               <div className="flex flex-col items-center space-y-2">
@@ -138,7 +143,7 @@ export const TimePicker = forwardRef<HTMLButtonElement, TimePickerProps>(
                 >
                   <ChevronUp className="h-4 w-4" />
                 </Button>
-                <div className="text-2xl font-mono font-bold min-w-[3rem] text-center">
+                <div className="text-xl sm:text-2xl font-mono font-bold min-w-[2.5rem] sm:min-w-[3rem] text-center">
                   {minutes.toString().padStart(2, "0")}
                 </div>
                 <Button
@@ -159,7 +164,7 @@ export const TimePicker = forwardRef<HTMLButtonElement, TimePickerProps>(
               <div className="text-sm font-medium text-muted-foreground">
                 Durações comuns:
               </div>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {[
                   { label: "15min", value: 15 },
                   { label: "30min", value: 30 },

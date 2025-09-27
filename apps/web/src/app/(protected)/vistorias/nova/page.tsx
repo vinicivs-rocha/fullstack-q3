@@ -113,17 +113,19 @@ export default function NovaVistoriaPage() {
   return (
     <>
       {/* Header */}
-      <div className="px-6 py-4 border-b">
+      <div className="px-4 sm:px-6 py-4 border-b">
         <div className="flex items-center">
-          <div className="flex items-center justify-between w-full">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
                 Nova Vistoria
               </h1>
-              <p className="text-gray-600">Criar uma nova vistoria veicular</p>
+              <p className="text-sm sm:text-base text-gray-600">
+                Criar uma nova vistoria veicular
+              </p>
             </div>
             <Link href="/vistorias">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="w-full sm:w-auto">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Voltar
               </Button>
@@ -133,16 +135,16 @@ export default function NovaVistoriaPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-hidden p-4 sm:p-6">
         <div className="max-w-7xl mx-auto">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit((data) =>
                 createInvoiceMutation.mutate(data),
               )}
-              className="space-y-6"
+              className="space-y-4 sm:space-y-6"
             >
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 {/* Informações do Veículo */}
                 <Card>
                   <CardHeader>
@@ -154,7 +156,7 @@ export default function NovaVistoriaPage() {
                       Selecione o veículo que será vistoriado
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-3 sm:space-y-4">
                     <FormField
                       control={form.control}
                       name="vehicleId"
@@ -248,7 +250,7 @@ export default function NovaVistoriaPage() {
                       )}
                     />
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
                         name="price"
@@ -319,14 +321,23 @@ export default function NovaVistoriaPage() {
                               </Button>
                             </FormControl>
                           </PopoverTrigger>
-                          <PopoverContent className="w-full p-0" align="start">
+                          <PopoverContent
+                            className="w-full p-0"
+                            align="start"
+                            side="bottom"
+                            sideOffset={4}
+                            style={{
+                              width: "var(--radix-popover-trigger-width)",
+                            }}
+                          >
                             <Command>
                               <CommandInput
                                 placeholder="Buscar problemas..."
                                 value={newProblemInput}
                                 onValueChange={setNewProblemInput}
+                                className="h-9"
                               />
-                              <CommandList>
+                              <CommandList className="max-h-[200px] sm:max-h-[300px]">
                                 <CommandEmpty>
                                   <div className="py-6 text-center text-sm">
                                     <p className="mb-2">
@@ -408,9 +419,11 @@ export default function NovaVistoriaPage() {
                               <Badge
                                 key={problem.id}
                                 variant="secondary"
-                                className="flex items-center gap-1"
+                                className="flex items-center gap-1 text-xs sm:text-sm"
                               >
-                                {problem.label}
+                                <span className="truncate max-w-[120px] sm:max-w-none">
+                                  {problem.label}
+                                </span>
                                 <button
                                   type="button"
                                   onClick={() => {
@@ -420,7 +433,7 @@ export default function NovaVistoriaPage() {
                                     );
                                     field.onChange(newProblems);
                                   }}
-                                  className="ml-1 hover:bg-gray-300 rounded-full p-0.5"
+                                  className="ml-1 hover:bg-gray-300 rounded-full p-0.5 flex-shrink-0"
                                 >
                                   <X className="h-3 w-3" />
                                 </button>
@@ -464,16 +477,20 @@ export default function NovaVistoriaPage() {
               </Card>
 
               {/* Botões de Ação */}
-              <div className="flex justify-end space-x-4 pt-6">
-                <Link href="/vistorias">
-                  <Button variant="outline" type="button">
+              <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 pt-4 sm:pt-6">
+                <Link href="/vistorias" className="w-full sm:w-auto">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    className="w-full sm:w-auto"
+                  >
                     Cancelar
                   </Button>
                 </Link>
                 <Button
                   type="submit"
                   disabled={createInvoiceMutation.isPending}
-                  className="min-w-[120px]"
+                  className="w-full sm:w-auto sm:min-w-[120px]"
                 >
                   {createInvoiceMutation.isPending ? (
                     <>

@@ -54,29 +54,29 @@ export default function SignInPage() {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full">
-        <Card className="shadow-lg">
-          <CardHeader className="space-y-6 pb-8">
-            {/* Logo EPTA */}
-            <div className="flex flex-col items-center space-y-2">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 py-8 px-4 sm:px-6 md:px-8 lg:px-12">
+      <div className="max-w-md w-full md:max-w-lg lg:max-w-xl">
+        <Card className="shadow-lg md:shadow-xl">
+          <CardHeader className="space-y-4 md:space-y-6 pb-6 md:pb-8">
+            {/* Logo */}
+            <div className="flex flex-col items-center space-y-2 md:space-y-3">
               <div className="flex items-center space-x-3">
                 <Image
                   src="/company-logo.svg"
                   alt="EPTA TECNOLOGIA"
                   width={157}
                   height={44}
-                  className="w-32 h-8"
+                  className="w-32 h-8 md:w-40 md:h-10"
                 />
               </div>
             </div>
 
             {/* Título */}
-            <div className="text-center space-y-2">
-              <CardTitle className="text-2xl font-bold">
+            <div className="text-center space-y-2 md:space-y-3">
+              <CardTitle className="text-2xl md:text-3xl font-bold">
                 Sistema de Vistorias
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-sm md:text-base">
                 Entre com suas credenciais para acessar o sistema
               </CardDescription>
             </div>
@@ -84,21 +84,23 @@ export default function SignInPage() {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4 md:space-y-6">
                 {/* Campo Email */}
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-medium">E-mail</FormLabel>
+                      <FormLabel className="font-medium text-sm md:text-base">
+                        E-mail
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
+                          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 md:w-6 md:h-6" />
                           <Input
                             type="email"
                             placeholder="Digite seu e-mail"
-                            className="pl-10"
+                            className="pl-10 md:pl-12 h-10 md:h-12 text-sm md:text-base"
                             {...field}
                           />
                         </div>
@@ -114,14 +116,16 @@ export default function SignInPage() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-medium">Senha</FormLabel>
+                      <FormLabel className="font-medium text-sm md:text-base">
+                        Senha
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
+                          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 md:w-6 md:h-6" />
                           <Input
                             type="password"
                             placeholder="Digite sua senha"
-                            className="pl-10"
+                            className="pl-10 md:pl-12 h-10 md:h-12 text-sm md:text-base"
                             {...field}
                           />
                         </div>
@@ -139,14 +143,14 @@ export default function SignInPage() {
                 </div>
               </CardContent>
 
-              <CardFooter className="flex flex-col space-y-6">
+              <CardFooter className="flex flex-col space-y-4 md:space-y-6">
                 {/* Botão Entrar */}
                 <Button
                   type="submit"
-                  className="w-full font-medium py-3 rounded-lg flex items-center justify-center space-x-2"
+                  className="w-full font-medium py-3 md:py-4 rounded-lg flex items-center justify-center space-x-2 text-sm md:text-base"
                   disabled={form.formState.isSubmitting}
                 >
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
                   <span>
                     {form.formState.isSubmitting
                       ? "Entrando..."
@@ -158,14 +162,18 @@ export default function SignInPage() {
                 <div className="w-full h-px"></div>
 
                 {/* Seção de Suporte */}
-                <div className="text-center space-y-1">
-                  <p className="text-sm">Problemas para acessar?</p>
-                  <p className="text-sm">Entre em contato com o suporte</p>
+                <div className="text-center space-y-1 md:space-y-2">
+                  <p className="text-sm md:text-base">
+                    Problemas para acessar?
+                  </p>
+                  <p className="text-sm md:text-base">
+                    Entre em contato com o suporte
+                  </p>
                 </div>
 
                 {/* Versão do Sistema */}
                 <div className="text-center">
-                  <p className="text-xs">
+                  <p className="text-xs md:text-sm">
                     Sistema de Vistorias Veiculares v2.0
                   </p>
                 </div>

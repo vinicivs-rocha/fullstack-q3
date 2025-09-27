@@ -55,17 +55,17 @@ export default function VistoriasPage() {
       }) => {
         const vistoria = row.original;
         return (
-          <div className="flex items-center">
+          <div className="flex items-center min-w-0">
             <div className="flex-shrink-0 h-8 w-8">
               <Badge className="h-8 w-8 bg-accent text-accent-foreground border border-accent-foreground/20">
                 <Car className="h-6 w-6 text-accent-foreground" />
               </Badge>
             </div>
-            <div className="ml-4">
-              <div className="text-sm font-medium text-gray-900">
+            <div className="ml-4 min-w-0 flex-1">
+              <div className="text-sm font-medium text-gray-900 truncate">
                 {vistoria.vehicle.plate}
               </div>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-gray-500 truncate">
                 {vistoria.vehicle.brand} {vistoria.vehicle.model}{" "}
                 {vistoria.vehicle.year}
               </div>
@@ -84,7 +84,9 @@ export default function VistoriasPage() {
       }) => {
         const date = new Date(row.getValue("createdAt"));
         return (
-          <div className="text-sm">{date.toLocaleDateString("pt-BR")}</div>
+          <div className="text-sm whitespace-nowrap">
+            {date.toLocaleDateString("pt-BR")}
+          </div>
         );
       },
     },
@@ -98,7 +100,7 @@ export default function VistoriasPage() {
       }) => {
         const vistoria = row.original;
         return (
-          <div className="flex items-center">
+          <div className="flex items-center min-w-0">
             <div className="flex-shrink-0 h-6 w-6">
               <div className="h-6 w-6 rounded-full bg-gray-300 flex items-center justify-center">
                 <span className="text-xs font-medium text-gray-700">
@@ -109,8 +111,8 @@ export default function VistoriasPage() {
                 </span>
               </div>
             </div>
-            <div className="ml-3">
-              <div className="text-sm font-medium text-gray-900">
+            <div className="ml-3 min-w-0 flex-1">
+              <div className="text-sm font-medium text-gray-900 truncate">
                 {vistoria.surveyor.name}
               </div>
             </div>
@@ -157,7 +159,10 @@ export default function VistoriasPage() {
 
         return (
           <div className="flex items-center">
-            <Badge variant="secondary" className={`mr-2 ${config.className}`}>
+            <Badge
+              variant="secondary"
+              className={`mr-2 ${config.className} whitespace-nowrap`}
+            >
               {config.icon}
               <span className="text-sm">{config.text}</span>
             </Badge>
@@ -176,19 +181,19 @@ export default function VistoriasPage() {
         const invoice = row.original;
 
         return (
-          <div className="flex space-x-2">
+          <div className="flex space-x-1">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => detail(invoice.id)}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-gray-600 h-8 w-8 p-0"
             >
               <Eye className="h-4 w-4" />
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-gray-600 h-8 w-8 p-0"
               asChild
             >
               <Link href={`/vistorias/editar/${invoice.id}`}>
@@ -199,7 +204,7 @@ export default function VistoriasPage() {
               variant="ghost"
               size="sm"
               onClick={() => exportInvoice(invoice.id)}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-gray-600 h-8 w-8 p-0"
             >
               <Download className="h-4 w-4" />
             </Button>
@@ -230,75 +235,84 @@ export default function VistoriasPage() {
   return (
     <>
       {/* Header */}
-      <div className="px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Vistorias</h1>
-            <p className="text-gray-600">
+      <div className="px-4 sm:px-6 py-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
+              Vistorias
+            </h1>
+            <p className="text-sm sm:text-base text-gray-600 mt-1">
               Gerencie todas as vistorias realizadas
             </p>
           </div>
-          <Button asChild>
-            <Link href="/vistorias/nova">
-              <Plus className="mr-2 h-4 w-4" />
-              Nova Vistoria
-            </Link>
-          </Button>
+          <div className="flex-shrink-0">
+            <Button asChild className="w-full sm:w-auto">
+              <Link href="/vistorias/nova">
+                <Plus className="mr-2 h-4 w-4" />
+                <span className="hidden sm:inline">Nova Vistoria</span>
+                <span className="sm:hidden">Nova</span>
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto p-6">
-        {/* Search and Filters */}
-        <InvoicesSearch
-          status={status}
-          onStatusChange={setStatus}
-          period={
-            startsAt && endsAt ? { start: startsAt, end: endsAt } : undefined
-          }
-          onPeriodChange={(period) => {
-            if (period) {
-              setStartsAt(period.start);
-              setEndsAt(period.end);
-            } else {
-              setStartsAt(undefined);
-              setEndsAt(undefined);
+      <div className="flex-1 overflow-hidden p-4 sm:p-6">
+        <div className="h-full flex flex-col">
+          {/* Search and Filters */}
+          <InvoicesSearch
+            status={status}
+            onStatusChange={setStatus}
+            period={
+              startsAt && endsAt ? { start: startsAt, end: endsAt } : undefined
             }
-          }}
-          search={search}
-          onSearchChange={setSearch}
-        />
-
-        {/* Stats Cards */}
-        <div className="mb-6">
-          <StatsCards
-            stats={
-              statsQuery.data ?? {
-                total: 0,
-                pending: 0,
-                approved: 0,
-                rejected: 0,
+            onPeriodChange={(period) => {
+              if (period) {
+                setStartsAt(period.start);
+                setEndsAt(period.end);
+              } else {
+                setStartsAt(undefined);
+                setEndsAt(undefined);
               }
-            }
-            isLoading={statsQuery.isLoading}
+            }}
+            search={search}
+            onSearchChange={setSearch}
           />
-        </div>
 
-        {/* DataTable */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium">Lista de Vistorias</h3>
+          {/* Stats Cards */}
+          <div className="mb-6 flex-shrink-0">
+            <StatsCards
+              stats={
+                statsQuery.data ?? {
+                  total: 0,
+                  pending: 0,
+                  approved: 0,
+                  rejected: 0,
+                }
+              }
+              isLoading={statsQuery.isLoading}
+            />
           </div>
 
-          <DataTable
-            columns={columns}
-            data={invoicesQuery.data?.invoices ?? []}
-            onPaginationChange={handlePaginationChange}
-            pagination={pagination}
-            manualPagination={true}
-            totalRows={invoicesQuery.data?.total ?? 0}
-            isLoading={invoicesQuery.isLoading}
-          />
+          {/* DataTable */}
+          <div className="flex-1 flex flex-col min-h-0">
+            <div className="flex items-center justify-between mb-4 flex-shrink-0">
+              <h3 className="text-base sm:text-lg font-medium">
+                Lista de Vistorias
+              </h3>
+            </div>
+
+            <DataTable
+              columns={columns}
+              data={invoicesQuery.data?.invoices ?? []}
+              onPaginationChange={handlePaginationChange}
+              pagination={pagination}
+              manualPagination={true}
+              totalRows={invoicesQuery.data?.total ?? 0}
+              isLoading={invoicesQuery.isLoading}
+            />
+          </div>
         </div>
       </div>
 

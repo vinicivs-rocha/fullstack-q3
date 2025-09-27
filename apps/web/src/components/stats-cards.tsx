@@ -35,20 +35,24 @@ export function StatsCards({ stats, isLoading = false }: StatsCardsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
       {cards.map((card) => (
-        <Card key={card.title} className="p-6">
+        <Card key={card.title} className="p-4 sm:p-6">
           <div className="flex justify-between items-center">
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">{card.title}</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">
+                {card.title}
+              </p>
               {isLoading ? (
-                <Skeleton className="w-16 h-4" />
+                <Skeleton className="w-12 sm:w-16 h-4 mt-1" />
               ) : (
-                <p className="text-2xl font-bold text-gray-900">{card.value}</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1">
+                  {card.value}
+                </p>
               )}
             </div>
-            <div className="p-3 rounded-lg bg-primary/20 text-primary border border-primary/40">
-              <span className="text-xl">{card.icon}</span>
+            <div className="p-2 sm:p-3 rounded-lg bg-primary/20 text-primary border border-primary/40 flex-shrink-0 ml-2">
+              <span className="text-lg sm:text-xl">{card.icon}</span>
             </div>
           </div>
         </Card>

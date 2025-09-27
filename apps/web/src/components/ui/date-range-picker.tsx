@@ -22,6 +22,7 @@ interface DateRangePickerProps {
   className?: string;
 }
 
+
 export function DateRangePicker({
   date,
   onDateChange,
@@ -36,26 +37,33 @@ export function DateRangePicker({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[260px] justify-start text-left font-normal",
+              "w-full justify-start text-left font-normal text-sm",
               !date && "text-muted-foreground",
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {date?.from ? (
-              date.to ? (
-                <>
-                  {format(date.from, "dd/MM/yyyy", { locale: ptBR })} -{" "}
-                  {format(date.to, "dd/MM/yyyy", { locale: ptBR })}
-                </>
+            <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+            <span className="truncate">
+              {date?.from ? (
+                date.to ? (
+                  <>
+                    {format(date.from, "dd/MM/yyyy", { locale: ptBR })} -{" "}
+                    {format(date.to, "dd/MM/yyyy", { locale: ptBR })}
+                  </>
+                ) : (
+                  format(date.from, "dd/MM/yyyy", { locale: ptBR })
+                )
               ) : (
-                format(date.from, "dd/MM/yyyy", { locale: ptBR })
-              )
-            ) : (
-              <span>{placeholder}</span>
-            )}
+                <span>{placeholder}</span>
+              )}
+            </span>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent
+          className="w-auto p-0"
+          align="start"
+          side="bottom"
+          sideOffset={4}
+        >
           <Calendar
             initialFocus
             mode="range"
@@ -64,6 +72,7 @@ export function DateRangePicker({
             onSelect={onDateChange}
             numberOfMonths={2}
             locale={ptBR}
+            className="rounded-md border"
           />
         </PopoverContent>
       </Popover>
