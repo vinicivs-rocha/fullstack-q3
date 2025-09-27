@@ -23,7 +23,7 @@ export const useReports = (
 
   const [start, setStart] = useState<string>(startOfMonth.toISOString());
   const [end, setEnd] = useState<string>(endOfMonth.toISOString());
-  const [surveyorId, setSurveyorId] = useState<number | undefined>(undefined);
+  const [surveyorId, setSurveyorId] = useState<number>(0);
 
   const invoicesStatsQuery = useQuery({
     queryKey: ["invoices-stats", start, end, surveyorId],
@@ -32,7 +32,7 @@ export const useReports = (
         ReportsFiltersSchema.parse({
           start: new Date(start),
           end: end && new Date(end),
-          surveyorId,
+          surveyorId: surveyorId === 0 ? undefined : surveyorId,
         }),
       ),
   });
@@ -44,7 +44,7 @@ export const useReports = (
         ReportsFiltersSchema.parse({
           start: new Date(start),
           end: end && new Date(end),
-          surveyorId,
+          surveyorId: surveyorId === 0 ? undefined : surveyorId,
         }),
       ),
   });
@@ -56,7 +56,7 @@ export const useReports = (
         ReportsFiltersSchema.parse({
           start: new Date(start),
           end: end && new Date(end),
-          surveyorId,
+          surveyorId: surveyorId === 0 ? undefined : surveyorId,
         }),
       ),
   });
@@ -68,7 +68,7 @@ export const useReports = (
         ReportsFiltersSchema.parse({
           start: new Date(start),
           end: end && new Date(end),
-          surveyorId,
+          surveyorId: surveyorId === 0 ? undefined : surveyorId,
         }),
       ),
   });
@@ -80,7 +80,7 @@ export const useReports = (
         ReportsFiltersSchema.parse({
           start: new Date(start),
           end: end && new Date(end),
-          surveyorId,
+          surveyorId: surveyorId === 0 ? undefined : surveyorId,
         }),
       ),
   });
@@ -92,7 +92,7 @@ export const useReports = (
         ReportsFiltersSchema.parse({
           start: new Date(start),
           end: end && new Date(end),
-          surveyorId,
+          surveyorId: surveyorId === 0 ? undefined : surveyorId,
         }),
       ),
   });
@@ -105,7 +105,12 @@ export const useReports = (
   const exportReportMutation = useMutation({
     mutationKey: ["export-report"],
     mutationFn: () =>
-      reportsService.export(reportContentRef.current!, start, end, surveyorId),
+      reportsService.export(
+        reportContentRef.current!,
+        start,
+        end,
+        surveyorId === 0 ? undefined : surveyorId,
+      ),
   });
 
   useEffect(() => {

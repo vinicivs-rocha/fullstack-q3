@@ -74,7 +74,7 @@ export function SurveyorsPerformanceTable({
   }
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>Performance por Vistoriador</CardTitle>
       </CardHeader>

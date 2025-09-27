@@ -76,18 +76,13 @@ export default function ReportsPage() {
                 </label>
                 <Select
                   value={surveyorId?.toString()}
-                  onValueChange={(value) =>
-                    setSurveyorId((prev) =>
-                      value && Number(value) !== prev
-                        ? Number(value)
-                        : undefined,
-                    )
-                  }
+                  onValueChange={(value) => setSurveyorId(Number(value))}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Todos os Vistoriadores" />
+                    <SelectValue placeholder="Selecione o vistoriador" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="0">Todos os Vistoriadores</SelectItem>
                     {surveyorsQuery.data?.map((surveyor) => (
                       <SelectItem
                         key={surveyor.id}
