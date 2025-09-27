@@ -3,7 +3,17 @@ import { FuelTypeSchema } from "./invoices";
 
 export const VehicleStatusSchema = z.enum(["ATIVO", "PENDENTE", "INATIVO"]);
 
+export const VehicleYearsFiltersSchema = z.object({
+  status: VehicleStatusSchema.optional(),
+  brand: z.string().optional(),
+});
+
 export const VehicleYearsResponseSchema = z.array(z.number());
+
+export const VehicleBrandsFiltersSchema = z.object({
+  status: VehicleStatusSchema.optional(),
+  year: z.number().optional(),
+});
 
 export const VehicleBrandsResponseSchema = z.array(z.string());
 
@@ -100,7 +110,9 @@ export const VehicleUpdatingDataSchema = z.object({
 export type VehicleStatus = z.infer<typeof VehicleStatusSchema>;
 export type VehicleListResponse = z.infer<typeof VehicleListResponseSchema>;
 export type VehicleCountsResponse = z.infer<typeof VehicleCountsResponseSchema>;
+export type VehicleBrandsFilters = z.infer<typeof VehicleBrandsFiltersSchema>;
 export type VehicleBrandsResponse = z.infer<typeof VehicleBrandsResponseSchema>;
+export type VehicleYearsFilters = z.infer<typeof VehicleYearsFiltersSchema>;
 export type VehicleYearsResponse = z.infer<typeof VehicleYearsResponseSchema>;
 export type VehiclePaginatedListResponse = z.infer<
   typeof VehiclePaginatedListResponseSchema

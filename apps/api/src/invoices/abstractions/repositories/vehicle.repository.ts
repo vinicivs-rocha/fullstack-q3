@@ -3,8 +3,12 @@ import { VehicleModel } from '../models/vehicle.model';
 
 export abstract class VehicleRepository {
   abstract findAll(): Promise<VehicleModel[]>;
-  abstract listBrands(): Promise<string[]>;
-  abstract listYears(): Promise<number[]>;
+  abstract listBrands(
+    filters: VehicleRepository.ListBrandsFilters,
+  ): Promise<string[]>;
+  abstract listYears(
+    filters: VehicleRepository.ListYearsFilters,
+  ): Promise<number[]>;
   abstract count(filters: VehicleRepository.CountFilters): Promise<number>;
   abstract paginatedList(
     filters: VehicleRepository.PaginatedListFilters,
@@ -35,6 +39,16 @@ export namespace VehicleRepository {
   export interface PaginatedListOutput {
     vehicles: VehicleModel[];
     total: number;
+  }
+
+  export interface ListBrandsFilters {
+    status?: VehicleStatus;
+    year?: number;
+  }
+
+  export interface ListYearsFilters {
+    status?: VehicleStatus;
+    brand?: string;
   }
 
   export interface CreateData {

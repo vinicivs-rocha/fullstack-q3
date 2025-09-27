@@ -8,6 +8,7 @@ import {
   TrendingUp,
   TrendingDown,
   Minus,
+  ClipboardCheck,
 } from "lucide-react";
 import { InvoicesAggregationStats } from "@fullstack-q3/contracts";
 
@@ -44,7 +45,7 @@ export function ReportsStatsCards({ stats }: ReportsStatsCardsProps) {
       value: stats.total.count.toLocaleString(),
       change: `${stats.total.variationPercentage?.toFixed(1) ?? "0"}% vs mês anterior`,
       changeType: getChangeType(stats.total.variationPercentage ?? 0),
-      icon: <CheckCircle className="h-6 w-6" />,
+      icon: <ClipboardCheck className="h-6 w-6" />,
     },
     {
       title: "Taxa de Aprovação",

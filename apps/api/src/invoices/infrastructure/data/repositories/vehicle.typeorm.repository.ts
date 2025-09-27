@@ -81,23 +81,97 @@ export class VehicleTypeormRepository implements VehicleRepository {
     return query.getCount();
   }
 
-  async listBrands(): Promise<string[]> {
-    const vehicles = await this.vehicleRepository
+  async listBrands(
+    filters: VehicleRepository.ListBrandsFilters,
+  ): Promise<string[]> {
+    const query = this.vehicleRepository
       .createQueryBuilder('vehicle')
       .select(['vehicle.brand'])
       .distinctOn(['vehicle.brand'])
-      .orderBy('vehicle.brand', 'ASC')
-      .getMany();
+      .leftJoinAndMapOne(
+        'vehicle.lastInvoice',
+        'vehicle.invoices',
+        'lastInvoice',
+        '"lastInvoice"."createdAt" = (SELECT MAX("createdAt") FROM invoices WHERE "vehicleId" = "vehicle"."id")',
+      )
+      .orderBy('vehicle.brand', 'ASC');
+
+    if (filters.status) {
+      switch (filters.status) {
+        case 'ATIVO':
+          query.andWhere('lastInvoice.status = :status', {
+            status: 'APROVADA',
+          });
+          break;
+        case 'PENDENTE':
+          query.andWhere(
+            new Brackets((qb) => {
+              qb.where('lastInvoice.status = :status', { status: 'PENDENTE' });
+              qb.orWhere('lastInvoice.status IS NULL');
+            }),
+          );
+          break;
+        case 'INATIVO':
+          query.andWhere('lastInvoice.status = :status', {
+            status: 'REPROVADA',
+          });
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (filters.year) {
+      query.andWhere('vehicle.year = :year', { year: filters.year });
+    }
+
+    const vehicles = await query.getMany();
     return vehicles.map((vehicle) => vehicle.brand);
   }
 
-  async listYears(): Promise<number[]> {
-    const vehicles = await this.vehicleRepository
+  async listYears(
+    filters: VehicleRepository.ListYearsFilters,
+  ): Promise<number[]> {
+    const query = this.vehicleRepository
       .createQueryBuilder('vehicle')
       .select(['vehicle.year'])
       .distinctOn(['vehicle.year'])
-      .orderBy('vehicle.year', 'ASC')
-      .getMany();
+      .leftJoinAndMapOne(
+        'vehicle.lastInvoice',
+        'vehicle.invoices',
+        'lastInvoice',
+        '"lastInvoice"."createdAt" = (SELECT MAX("createdAt") FROM invoices WHERE "vehicleId" = "vehicle"."id")',
+      )
+      .orderBy('vehicle.year', 'ASC');
+
+    if (filters.status) {
+      switch (filters.status) {
+        case 'ATIVO':
+          query.andWhere('lastInvoice.status = :status', {
+            status: 'APROVADA',
+          });
+          break;
+        case 'PENDENTE':
+          query.andWhere(
+            new Brackets((qb) => {
+              qb.where('lastInvoice.status = :status', { status: 'PENDENTE' });
+              qb.orWhere('lastInvoice.status IS NULL');
+            }),
+          );
+          break;
+        case 'INATIVO':
+          query.andWhere('lastInvoice.status = :status', {
+            status: 'REPROVADA',
+          });
+          break;
+      }
+    }
+
+    if (filters.brand) {
+      query.andWhere('vehicle.brand = :brand', { brand: filters.brand });
+    }
+
+    const vehicles = await query.getMany();
     return vehicles.map((vehicle) => vehicle.year);
   }
 

@@ -3,12 +3,14 @@ import { VehicleService } from "@/services/vehicle.service";
 import { container } from "@/lib/di-container";
 import { TYPES } from "@/lib/di-types";
 import {
+  VehicleBrandsFiltersSchema,
   VehicleCreationData,
   VehicleCreationDataSchema,
   VehiclePaginatedListFiltersSchema,
   VehicleStatus,
   VehicleUpdatingData,
   VehicleUpdatingDataSchema,
+  VehicleYearsFiltersSchema,
 } from "@fullstack-q3/contracts";
 import { useEffect, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
@@ -38,13 +40,25 @@ export const useVehicle = (
   const [isDetailing, setIsDetailing] = useState(false);
 
   const vehiclesYearsQuery = useQuery({
-    queryKey: ["vehicles-years"],
-    queryFn: () => vehicleService.listYears(),
+    queryKey: ["vehicles-years", status, brand],
+    queryFn: () =>
+      vehicleService.listYears(
+        VehicleYearsFiltersSchema.parse({
+          status,
+          brand,
+        }),
+      ),
   });
 
   const vehiclesBrandsQuery = useQuery({
-    queryKey: ["vehicles-brands"],
-    queryFn: () => vehicleService.listBrands(),
+    queryKey: ["vehicles-brands", status, year],
+    queryFn: () =>
+      vehicleService.listBrands(
+        VehicleBrandsFiltersSchema.parse({
+          status,
+          year,
+        }),
+      ),
   });
 
   const vehiclesCountsQuery = useQuery({

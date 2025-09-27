@@ -1,12 +1,14 @@
-import {
+import type {
+  VehicleBrandsFilters,
   VehicleBrandsResponse,
   VehicleCountsResponse,
-  type VehicleCreationData,
+  VehicleCreationData,
   VehicleDetailsResponse,
+  VehicleYearsFilters,
   VehicleListResponse,
-  type VehiclePaginatedListFilters,
+  VehiclePaginatedListFilters,
   VehiclePaginatedListResponse,
-  type VehicleUpdatingData,
+  VehicleUpdatingData,
   VehicleYearsResponse,
 } from '@fullstack-q3/contracts';
 import {
@@ -40,13 +42,17 @@ export class VehiclesController {
   }
 
   @Get('brands')
-  async listBrands(): Promise<VehicleBrandsResponse> {
-    return this.vehicleRepository.listBrands();
+  async listBrands(
+    @Query() filters: VehicleBrandsFilters,
+  ): Promise<VehicleBrandsResponse> {
+    return this.vehicleRepository.listBrands(filters);
   }
 
   @Get('years')
-  async listYears(): Promise<VehicleYearsResponse> {
-    return this.vehicleRepository.listYears();
+  async listYears(
+    @Query() filters: VehicleYearsFilters,
+  ): Promise<VehicleYearsResponse> {
+    return this.vehicleRepository.listYears(filters);
   }
 
   @Get('counts')
@@ -96,6 +102,7 @@ export class VehiclesController {
       brand: data.brand,
       year: data.year,
       color: data.color,
+      mileage: data.mileage,
       fuelType: data.fuelType,
       chassis: data.chassisNumber,
       proprietary: {

@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { TYPES } from "@/lib/di-types";
 import { Axios } from "axios";
 import {
+  VehicleBrandsFilters,
   VehicleBrandsResponse,
   VehicleCountsResponse,
   VehicleCreationData,
@@ -10,6 +11,7 @@ import {
   VehiclePaginatedListFilters,
   VehiclePaginatedListResponse,
   VehicleUpdatingData,
+  VehicleYearsFilters,
   VehicleYearsResponse,
 } from "@fullstack-q3/contracts";
 
@@ -33,15 +35,21 @@ export class VehicleService {
     return response.data;
   }
 
-  async listBrands(): Promise<VehicleBrandsResponse> {
-    const response =
-      await this.httpClient.get<VehicleBrandsResponse>("/vehicles/brands");
+  async listBrands(
+    filters: VehicleBrandsFilters,
+  ): Promise<VehicleBrandsResponse> {
+    const response = await this.httpClient.get<VehicleBrandsResponse>(
+      "/vehicles/brands",
+      { params: filters },
+    );
     return response.data;
   }
 
-  async listYears(): Promise<VehicleYearsResponse> {
-    const response =
-      await this.httpClient.get<VehicleYearsResponse>("/vehicles/years");
+  async listYears(filters: VehicleYearsFilters): Promise<VehicleYearsResponse> {
+    const response = await this.httpClient.get<VehicleYearsResponse>(
+      "/vehicles/years",
+      { params: filters },
+    );
     return response.data;
   }
 
