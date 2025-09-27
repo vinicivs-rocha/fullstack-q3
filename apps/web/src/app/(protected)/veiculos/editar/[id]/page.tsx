@@ -2,7 +2,13 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -21,18 +27,29 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useVehicle } from "@/hooks/use-vehicle";
-import { FuelType, VehicleUpdatingData, VehicleUpdatingDataSchema } from "@fullstack-q3/contracts";
+import {
+  FuelType,
+  VehicleUpdatingData,
+  VehicleUpdatingDataSchema,
+} from "@fullstack-q3/contracts";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Calendar, Car, Gauge, Hash, Loader2, Mail, Palette, User } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  Car,
+  Gauge,
+  Hash,
+  Loader2,
+  Mail,
+  Palette,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 export default function EditarVeiculoPage() {
-  const { 
-    vehicleDetailsQuery, 
-    update,
-  } = useVehicle();
+  const { vehicleDetailsQuery, update } = useVehicle();
 
   const form = useForm<VehicleUpdatingData>({
     resolver: zodResolver(VehicleUpdatingDataSchema),
@@ -83,13 +100,16 @@ export default function EditarVeiculoPage() {
 
   const formatPlate = (value: string) => {
     const cleaned = value.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
-    
+
     if (cleaned.length <= 3) {
       return cleaned;
     } else if (cleaned.length <= 7) {
       return cleaned.replace(/^([A-Z]{3})([0-9]+)$/, "$1-$2");
     } else {
-      return cleaned.replace(/^([A-Z]{3})([0-9])([A-Z])([0-9]{2})$/, "$1$2$3$4");
+      return cleaned.replace(
+        /^([A-Z]{3})([0-9])([A-Z])([0-9]{2})$/,
+        "$1$2$3$4",
+      );
     }
   };
 
@@ -128,7 +148,9 @@ export default function EditarVeiculoPage() {
         <div className="flex items-center">
           <div className="flex items-center justify-between w-full">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Editar Veículo</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Editar Veículo
+              </h1>
               <p className="text-gray-600">
                 Editando veículo {vehicleDetailsQuery.data?.plate}
               </p>
@@ -147,7 +169,10 @@ export default function EditarVeiculoPage() {
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-7xl mx-auto">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleUpdate)} className="space-y-6">
+            <form
+              onSubmit={form.handleSubmit(handleUpdate)}
+              className="space-y-6"
+            >
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Informações do Veículo */}
                 <Card>
@@ -156,9 +181,7 @@ export default function EditarVeiculoPage() {
                       <Car className="mr-2 h-5 w-5" />
                       Informações do Veículo
                     </CardTitle>
-                    <CardDescription>
-                      Dados básicos do veículo
-                    </CardDescription>
+                    <CardDescription>Dados básicos do veículo</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
@@ -176,7 +199,9 @@ export default function EditarVeiculoPage() {
                                   placeholder="ABC-1234"
                                   {...field}
                                   onChange={(e) => {
-                                    const formatted = formatPlate(e.target.value);
+                                    const formatted = formatPlate(
+                                      e.target.value,
+                                    );
                                     field.onChange(formatted);
                                   }}
                                   maxLength={8}
@@ -206,7 +231,12 @@ export default function EditarVeiculoPage() {
                                   type="number"
                                   placeholder="2024"
                                   {...field}
-                                  onChange={(e) => field.onChange(parseInt(e.target.value) || new Date().getFullYear())}
+                                  onChange={(e) =>
+                                    field.onChange(
+                                      parseInt(e.target.value) ||
+                                        new Date().getFullYear(),
+                                    )
+                                  }
                                   min={new Date().getFullYear() - 100}
                                   max={new Date().getFullYear() + 1}
                                   className="font-mono"
@@ -288,9 +318,12 @@ export default function EditarVeiculoPage() {
                             {vehicleDetailsQuery.isLoading ? (
                               <Skeleton className="h-9 w-full" />
                             ) : (
-                              <Select onValueChange={(value) => {
-                                if (value) field.onChange(value as FuelType);
-                              }} value={field.value}>
+                              <Select
+                                onValueChange={(value) => {
+                                  if (value) field.onChange(value as FuelType);
+                                }}
+                                value={field.value}
+                              >
                                 <FormControl>
                                   <SelectTrigger>
                                     <SelectValue placeholder="Selecione o tipo de combustível" />
@@ -298,7 +331,10 @@ export default function EditarVeiculoPage() {
                                 </FormControl>
                                 <SelectContent>
                                   {fuelTypeOptions.map((option) => (
-                                    <SelectItem key={option.value} value={option.value}>
+                                    <SelectItem
+                                      key={option.value}
+                                      value={option.value}
+                                    >
                                       {option.label}
                                     </SelectItem>
                                   ))}
@@ -324,9 +360,9 @@ export default function EditarVeiculoPage() {
                             <Skeleton className="h-9 w-full" />
                           ) : (
                             <FormControl>
-                              <Input 
-                                placeholder="9BWZZZZ377VT004251" 
-                                {...field} 
+                              <Input
+                                placeholder="9BWZZZZ377VT004251"
+                                {...field}
                                 className="font-mono"
                                 maxLength={17}
                               />
@@ -350,11 +386,17 @@ export default function EditarVeiculoPage() {
                             <Skeleton className="h-9 w-full" />
                           ) : (
                             <FormControl>
-                              <Input 
+                              <Input
                                 type="number"
                                 placeholder="50000"
                                 {...field}
-                                onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                                onChange={(e) =>
+                                  field.onChange(
+                                    e.target.value
+                                      ? parseInt(e.target.value)
+                                      : undefined,
+                                  )
+                                }
                               />
                             </FormControl>
                           )}
@@ -411,10 +453,10 @@ export default function EditarVeiculoPage() {
                             <Skeleton className="h-9 w-full" />
                           ) : (
                             <FormControl>
-                              <Input 
+                              <Input
                                 type="email"
-                                placeholder="joao@email.com" 
-                                {...field} 
+                                placeholder="joao@email.com"
+                                {...field}
                               />
                             </FormControl>
                           )}
@@ -425,7 +467,9 @@ export default function EditarVeiculoPage() {
 
                     {/* Preview do veículo */}
                     <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                      <h4 className="text-sm font-medium text-gray-700 mb-3">Preview das Alterações</h4>
+                      <h4 className="text-sm font-medium text-gray-700 mb-3">
+                        Preview das Alterações
+                      </h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center justify-between">
                           <span className="text-gray-500">Placa:</span>
@@ -436,12 +480,16 @@ export default function EditarVeiculoPage() {
                         <div className="flex items-center justify-between">
                           <span className="text-gray-500">Veículo:</span>
                           <span>
-                            {form.watch("brand") || "Marca"} {form.watch("model") || "Modelo"} ({form.watch("year") || "Ano"})
+                            {form.watch("brand") || "Marca"}{" "}
+                            {form.watch("model") || "Modelo"} (
+                            {form.watch("year") || "Ano"})
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-gray-500">Proprietário:</span>
-                          <span>{form.watch("proprietary.name") || "Nome"}</span>
+                          <span>
+                            {form.watch("proprietary.name") || "Nome"}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -456,10 +504,7 @@ export default function EditarVeiculoPage() {
                     Cancelar
                   </Button>
                 </Link>
-                <Button 
-                  type="submit" 
-                  className="min-w-[120px]"
-                >                  
+                <Button type="submit" className="min-w-[120px]">
                   Atualizar Veículo
                 </Button>
               </div>

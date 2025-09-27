@@ -32,7 +32,12 @@ export function Sidebar({ user, onLogOut }: SidebarProps) {
       <div className="flex h-16 items-center px-6 border-b border-gray-200">
         <div className="flex justify-center items-center">
           <Link href="/vistorias">
-            <Image src="/company-logo.svg" alt="EPTA TECNOLOGIA" width={157} height={44} />
+            <Image
+              src="/company-logo.svg"
+              alt="EPTA TECNOLOGIA"
+              width={157}
+              height={44}
+            />
           </Link>
         </div>
       </div>
@@ -49,7 +54,7 @@ export function Sidebar({ user, onLogOut }: SidebarProps) {
                 "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors",
                 isActive
                   ? "bg-primary text-primary-foreground"
-                  : "text-foreground hover:bg-muted"
+                  : "text-foreground hover:bg-muted",
               )}
             >
               <span className="mr-3 text-lg">{item.icon}</span>
@@ -65,17 +70,25 @@ export function Sidebar({ user, onLogOut }: SidebarProps) {
           <div className="flex-shrink-0">
             <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
               <span className="text-sm font-medium text-gray-700">
-                {user.name.split(' ').map(n => n[0]).join('')}
+                {user.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
               </span>
             </div>
           </div>
           <div className="ml-3 flex-1">
             <p className="text-sm font-medium text-gray-900">{user.name}</p>
-            <p className="text-xs text-gray-500">{user.gender === "M" ? "Vistoriador" : "Vistoriadora"}</p>
+            <p className="text-xs text-gray-500">
+              {user.gender === "M" ? "Vistoriador" : "Vistoriadora"}
+            </p>
           </div>
-          <button onClick={onLogOut} className="ml-2 text-gray-400 hover:text-gray-600">
+          <button
+            onClick={onLogOut}
+            className="ml-2 text-gray-400 hover:text-gray-600"
+          >
             <span className="sr-only">Sair</span>
-              <LogOut className="h-5 w-5" />
+            <LogOut className="h-5 w-5" />
           </button>
         </div>
       </div>

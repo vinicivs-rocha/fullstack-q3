@@ -1,7 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -20,9 +27,7 @@ import * as z from "zod";
 import Image from "next/image";
 
 const signInSchema = z.object({
-  email: z
-    .email("Digite um email válido")
-    .min(1, "Email é obrigatório"),
+  email: z.email("Digite um email válido").min(1, "Email é obrigatório"),
   password: z
     .string()
     .min(1, "Senha é obrigatória")
@@ -32,7 +37,6 @@ const signInSchema = z.object({
 type SignInFormData = z.infer<typeof signInSchema>;
 
 export default function SignInPage() {
-  
   const form = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -42,9 +46,12 @@ export default function SignInPage() {
   });
   const { signInMutation } = useAuth();
 
-  const onSubmit = useCallback(async (data: SignInFormData) => {
+  const onSubmit = useCallback(
+    async (data: SignInFormData) => {
       await signInMutation.mutateAsync(data);
-  }, [signInMutation]);
+    },
+    [signInMutation],
+  );
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -63,7 +70,7 @@ export default function SignInPage() {
                 />
               </div>
             </div>
-            
+
             {/* Título */}
             <div className="text-center space-y-2">
               <CardTitle className="text-2xl font-bold">
@@ -134,13 +141,17 @@ export default function SignInPage() {
 
               <CardFooter className="flex flex-col space-y-6">
                 {/* Botão Entrar */}
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full font-medium py-3 rounded-lg flex items-center justify-center space-x-2"
                   disabled={form.formState.isSubmitting}
                 >
                   <ArrowRight className="w-4 h-4" />
-                  <span>{form.formState.isSubmitting ? "Entrando..." : "Entrar no Sistema"}</span>
+                  <span>
+                    {form.formState.isSubmitting
+                      ? "Entrando..."
+                      : "Entrar no Sistema"}
+                  </span>
                 </Button>
 
                 {/* Linha separadora */}

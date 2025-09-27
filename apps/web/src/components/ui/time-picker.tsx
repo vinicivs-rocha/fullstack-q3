@@ -2,9 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronUp, Clock } from "lucide-react";
@@ -19,17 +19,26 @@ interface TimePickerProps {
 }
 
 export const TimePicker = forwardRef<HTMLButtonElement, TimePickerProps>(
-  ({ value, onChange, placeholder = "Selecione a duração", className, disabled }, ref) => {
+  (
+    {
+      value,
+      onChange,
+      placeholder = "Selecione a duração",
+      className,
+      disabled,
+    },
+    ref,
+  ) => {
     const [open, setOpen] = useState(false);
-    
+
     const hours = Math.floor((value || 0) / 60);
     const minutes = (value || 0) % 60;
-    
+
     const formatTime = (totalMinutes: number) => {
       if (totalMinutes === 0) return "";
       const h = Math.floor(totalMinutes / 60);
       const m = totalMinutes % 60;
-      
+
       if (h === 0) return `${m}min`;
       if (m === 0) return `${h}h`;
       return `${h}h ${m}min`;
@@ -78,7 +87,7 @@ export const TimePicker = forwardRef<HTMLButtonElement, TimePickerProps>(
             className={cn(
               "w-full justify-start text-left font-normal",
               !value && "text-muted-foreground",
-              className
+              className,
             )}
             disabled={disabled}
           >
@@ -102,7 +111,7 @@ export const TimePicker = forwardRef<HTMLButtonElement, TimePickerProps>(
                   <ChevronUp className="h-4 w-4" />
                 </Button>
                 <div className="text-2xl font-mono font-bold min-w-[3rem] text-center">
-                  {hours.toString().padStart(2, '0')}
+                  {hours.toString().padStart(2, "0")}
                 </div>
                 <Button
                   variant="ghost"
@@ -130,7 +139,7 @@ export const TimePicker = forwardRef<HTMLButtonElement, TimePickerProps>(
                   <ChevronUp className="h-4 w-4" />
                 </Button>
                 <div className="text-2xl font-mono font-bold min-w-[3rem] text-center">
-                  {minutes.toString().padStart(2, '0')}
+                  {minutes.toString().padStart(2, "0")}
                 </div>
                 <Button
                   variant="ghost"
@@ -184,10 +193,7 @@ export const TimePicker = forwardRef<HTMLButtonElement, TimePickerProps>(
               >
                 Limpar
               </Button>
-              <Button
-                size="sm"
-                onClick={() => setOpen(false)}
-              >
+              <Button size="sm" onClick={() => setOpen(false)}>
                 Confirmar
               </Button>
             </div>
@@ -195,7 +201,7 @@ export const TimePicker = forwardRef<HTMLButtonElement, TimePickerProps>(
         </PopoverContent>
       </Popover>
     );
-  }
+  },
 );
 
 TimePicker.displayName = "TimePicker";

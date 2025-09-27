@@ -16,7 +16,10 @@ interface VehicleStatsCardsProps {
   isLoading?: boolean;
 }
 
-export function VehicleStatsCards({ stats, isLoading = false }: VehicleStatsCardsProps) {
+export function VehicleStatsCards({
+  stats,
+  isLoading = false,
+}: VehicleStatsCardsProps) {
   const cards = [
     {
       title: "Total",
@@ -61,4 +64,4 @@ export function VehicleStatsCards({ stats, isLoading = false }: VehicleStatsCard
       ))}
     </div>
   );
-} 
+}

@@ -5,27 +5,59 @@ import { InvoiceStatus } from "@fullstack-q3/contracts";
 import { Check, ChevronsUpDown, Clock, Search, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "./ui/command";
 import { DateRangePicker } from "./ui/date-range-picker";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-  
+
 interface InvoicesSearchProps {
   status: InvoiceStatus | undefined;
   onStatusChange: (status: InvoiceStatus | undefined) => void;
-  period: { start: string | undefined, end: string | undefined } | undefined;
-  onPeriodChange: (period: { start: string | undefined, end: string | undefined } | undefined) => void;
+  period: { start: string | undefined; end: string | undefined } | undefined;
+  onPeriodChange: (
+    period: { start: string | undefined; end: string | undefined } | undefined,
+  ) => void;
   search: string | undefined;
   onSearchChange: (search: string | undefined) => void;
 }
 
-const statusOptions: { value: InvoiceStatus, label: string, icon: React.ReactNode }[] = [
-  { value: "PENDENTE", label: "Pendentes", icon: <Clock className="mr-2 h-4 w-4" /> },
-  { value: "APROVADA", label: "Aprovadas", icon: <Check className="mr-2 h-4 w-4" /> },
-  { value: "REPROVADA", label: "Reprovadas", icon: <X className="mr-2 h-4 w-4" /> },
+const statusOptions: {
+  value: InvoiceStatus;
+  label: string;
+  icon: React.ReactNode;
+}[] = [
+  {
+    value: "PENDENTE",
+    label: "Pendentes",
+    icon: <Clock className="mr-2 h-4 w-4" />,
+  },
+  {
+    value: "APROVADA",
+    label: "Aprovadas",
+    icon: <Check className="mr-2 h-4 w-4" />,
+  },
+  {
+    value: "REPROVADA",
+    label: "Reprovadas",
+    icon: <X className="mr-2 h-4 w-4" />,
+  },
 ];
 
-export function InvoicesSearch({ status, onStatusChange, period, onPeriodChange, search, onSearchChange }: InvoicesSearchProps) {
+export function InvoicesSearch({
+  status,
+  onStatusChange,
+  period,
+  onPeriodChange,
+  search,
+  onSearchChange,
+}: InvoicesSearchProps) {
   const [statusOpen, setStatusOpen] = useState(false);
 
   const getActiveFiltersCount = () => {
@@ -38,10 +70,14 @@ export function InvoicesSearch({ status, onStatusChange, period, onPeriodChange,
 
   const getStatusLabel = (status: InvoiceStatus | undefined | null) => {
     switch (status) {
-      case "PENDENTE": return "Pendentes";
-      case "APROVADA": return "Aprovadas";
-      case "REPROVADA": return "Reprovadas";
-      default: return "Todos os Status";
+      case "PENDENTE":
+        return "Pendentes";
+      case "APROVADA":
+        return "Aprovadas";
+      case "REPROVADA":
+        return "Reprovadas";
+      default:
+        return "Todos os Status";
     }
   };
 
@@ -62,8 +98,7 @@ export function InvoicesSearch({ status, onStatusChange, period, onPeriodChange,
               />
             </div>
           </div>
-          
-          
+
           {/* Filtros */}
           <div className="flex gap-2">
             {/* Filtro de Status */}
@@ -100,14 +135,28 @@ export function InvoicesSearch({ status, onStatusChange, period, onPeriodChange,
                 </Command>
               </PopoverContent>
             </Popover>
-            
+
             <DateRangePicker
-              date={period && { from: period.start ? new Date(period.start) : undefined, to: period.end ? new Date(period.end) : undefined }}
-              onDateChange={(date) => onPeriodChange(date ? { start: date.from?.toISOString(), end: date.to?.toISOString() } : undefined)}
+              date={
+                period && {
+                  from: period.start ? new Date(period.start) : undefined,
+                  to: period.end ? new Date(period.end) : undefined,
+                }
+              }
+              onDateChange={(date) =>
+                onPeriodChange(
+                  date
+                    ? {
+                        start: date.from?.toISOString(),
+                        end: date.to?.toISOString(),
+                      }
+                    : undefined,
+                )
+              }
             />
           </div>
         </div>
-        
+
         {/* Filtros ativos */}
         {getActiveFiltersCount() > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">

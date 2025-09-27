@@ -6,6 +6,7 @@ import pluginReact from "eslint-plugin-react";
 import globals from "globals";
 import pluginNext from "@next/eslint-plugin-next";
 import pluginQuery from '@tanstack/eslint-plugin-query'
+import pluginPrettier from "eslint-plugin-prettier";
 import { config as baseConfig } from "./index.js";
 
 /**
@@ -46,6 +47,14 @@ export const config = [
       ...pluginReactHooks.configs.recommended.rules,
       // React scope no longer necessary with new JSX transform.
       "react/react-in-jsx-scope": "off",
+    },
+  },
+  {
+    plugins: {
+      prettier: pluginPrettier,
+    },
+    rules: {
+      "prettier/prettier": "error",
     },
   },
 ];

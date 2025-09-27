@@ -21,4 +21,13 @@ export class SurveyorTypeormRepository implements SurveyorRepository {
       },
     });
   }
+
+  async list(): Promise<SurveyorModel[]> {
+    return this.surveyorRepository.find({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+  }
 }

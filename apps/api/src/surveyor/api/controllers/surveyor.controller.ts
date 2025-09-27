@@ -1,12 +1,13 @@
-import { MeResponse } from '@fullstack-q3/contracts';
+import { MeResponse, SurveyorListResponse } from '@fullstack-q3/contracts';
 import { Controller, Get, Inject, UseGuards } from '@nestjs/common';
 import { UserModel } from 'src/auth/abstractions/models/user.model';
 import { User } from 'src/auth/api/decorators/user.decorator';
 import { SurveyorJwtGuard } from 'src/auth/api/guards/surveyor.jwt.guard';
 import { SurveyorRepository } from 'src/surveyor/abstractions/repositories/surveyor.repository';
 import { SurveyorTypeormRepository } from 'src/surveyor/infrastructure/data/repositories/surveyor.typeorm.repository';
+import { ListSurveyorsPresenter } from '../presenters/list-surveyors.presenter';
 
-@Controller('surveyor')
+@Controller('surveyors')
 export class SurveyorController {
   constructor(
     @Inject(SurveyorTypeormRepository)
@@ -23,5 +24,11 @@ export class SurveyorController {
       email: surveyor.email,
       name: surveyor.name,
     };
+  }
+
+  @Get()
+  async list(): Promise<SurveyorListResponse> {
+    const surveyors = await this.surveyorRepository.list();
+    return ListSurveyorsPresenter.toHttp(surveyors);
   }
 }

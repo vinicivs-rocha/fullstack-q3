@@ -2,15 +2,13 @@ import { AuthGuard } from "@/components/auth-guard";
 import { DashboardLayout } from "@/components/dashboard-layout";
 
 export default function ProtectedLayout({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    return (
-        <AuthGuard>
-            <DashboardLayout>
-                {children}
-            </DashboardLayout>
-        </AuthGuard>
-    );
+  return (
+    <AuthGuard>
+      <DashboardLayout>{children}</DashboardLayout>
+    </AuthGuard>
+  );
 }

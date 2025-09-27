@@ -21,7 +21,7 @@ import {
   Mail,
   Palette,
   User,
-  X
+  X,
 } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 
@@ -32,16 +32,16 @@ interface VehicleDetailingModalProps {
   isLoading: boolean;
 }
 
-export const VehicleDetailingModal = ({ 
-  isOpen, 
-  onClose, 
-  vehicle, 
+export const VehicleDetailingModal = ({
+  isOpen,
+  onClose,
+  vehicle,
   isLoading,
 }: VehicleDetailingModalProps) => {
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
     }).format(value);
   };
 
@@ -62,13 +62,13 @@ export const VehicleDetailingModal = ({
       default:
         return fuelType;
     }
-  }
+  };
 
   if (isLoading) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent 
-          showCloseButton={false} 
+        <DialogContent
+          showCloseButton={false}
           className="min-w-2xl max-h-[90vh] overflow-y-auto"
         >
           <DialogHeader>
@@ -133,7 +133,10 @@ export const VehicleDetailingModal = ({
               <Skeleton className="h-6 w-48 mb-4" />
               <div className="space-y-3">
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 border rounded">
+                  <div
+                    key={i}
+                    className="flex items-center justify-between p-3 border rounded"
+                  >
                     <div className="flex items-center gap-3">
                       <Skeleton className="h-8 w-8 rounded" />
                       <div>
@@ -158,9 +161,9 @@ export const VehicleDetailingModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent 
-        showCloseButton={false} 
-        aria-describedby={`vehicle-detailing-modal-${vehicle.id}`} 
+      <DialogContent
+        showCloseButton={false}
+        aria-describedby={`vehicle-detailing-modal-${vehicle.id}`}
         className="min-w-2xl max-h-[90vh] overflow-y-auto"
       >
         <DialogHeader>
@@ -190,22 +193,26 @@ export const VehicleDetailingModal = ({
               </div>
             </div>
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-gray-500">Data de Cadastro</h3>
+              <h3 className="text-sm font-medium text-gray-500">
+                Data de Cadastro
+              </h3>
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-gray-400" />
                 <span className="text-sm">
-                  {new Date(vehicle.createdAt).toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+                  {new Date(vehicle.createdAt).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
                   })}
                 </span>
               </div>
             </div>
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-gray-500">ID do Veículo</h3>
+              <h3 className="text-sm font-medium text-gray-500">
+                ID do Veículo
+              </h3>
               <span className="text-sm font-mono">#{vehicle.id}</span>
             </div>
           </div>
@@ -218,14 +225,20 @@ export const VehicleDetailingModal = ({
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
-                <label className="text-sm font-medium text-gray-500">Placa</label>
+                <label className="text-sm font-medium text-gray-500">
+                  Placa
+                </label>
                 <p className="text-sm font-mono bg-gray-50 px-2 py-1 rounded">
                   {vehicle.plate}
                 </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Marca/Modelo</label>
-                <p className="text-sm">{vehicle.brand} {vehicle.model}</p>
+                <label className="text-sm font-medium text-gray-500">
+                  Marca/Modelo
+                </label>
+                <p className="text-sm">
+                  {vehicle.brand} {vehicle.model}
+                </p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-500">Ano</label>
@@ -239,13 +252,17 @@ export const VehicleDetailingModal = ({
                 </div>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Chassi</label>
+                <label className="text-sm font-medium text-gray-500">
+                  Chassi
+                </label>
                 <p className="text-sm font-mono bg-gray-50 px-2 py-1 rounded">
                   {vehicle.chassisNumber}
                 </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Combustível</label>
+                <label className="text-sm font-medium text-gray-500">
+                  Combustível
+                </label>
                 <div className="flex items-center gap-2">
                   <Fuel className="h-4 w-4 text-gray-400" />
                   <p className="text-sm">{getFuelType(vehicle.fuelType)}</p>
@@ -253,11 +270,13 @@ export const VehicleDetailingModal = ({
               </div>
               {vehicle.mileage && (
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Quilometragem</label>
+                  <label className="text-sm font-medium text-gray-500">
+                    Quilometragem
+                  </label>
                   <div className="flex items-center gap-2">
                     <Gauge className="h-4 w-4 text-gray-400" />
                     <span className="text-sm font-mono bg-gray-50 px-2 py-1 rounded">
-                      {vehicle.mileage.toLocaleString('pt-BR')} km
+                      {vehicle.mileage.toLocaleString("pt-BR")} km
                     </span>
                   </div>
                 </div>
@@ -273,11 +292,15 @@ export const VehicleDetailingModal = ({
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-gray-500">Nome</label>
+                <label className="text-sm font-medium text-gray-500">
+                  Nome
+                </label>
                 <p className="text-sm">{vehicle.proprietary.name}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Email</label>
+                <label className="text-sm font-medium text-gray-500">
+                  Email
+                </label>
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-gray-400" />
                   <p className="text-sm">{vehicle.proprietary.email}</p>
@@ -298,28 +321,31 @@ export const VehicleDetailingModal = ({
                   const getStatusConfig = (status: string) => {
                     switch (status) {
                       case "APROVADA":
-                        return { 
-                          icon: <Check className="h-4 w-4" />, 
-                          text: "Aprovada", 
-                          className: "bg-green-100 text-green-800 border-green-200" 
+                        return {
+                          icon: <Check className="h-4 w-4" />,
+                          text: "Aprovada",
+                          className:
+                            "bg-green-100 text-green-800 border-green-200",
                         };
                       case "PENDENTE":
-                        return { 
-                          icon: <Clock className="h-4 w-4" />, 
-                          text: "Pendente", 
-                          className: "bg-yellow-100 text-yellow-800 border-yellow-200" 
+                        return {
+                          icon: <Clock className="h-4 w-4" />,
+                          text: "Pendente",
+                          className:
+                            "bg-yellow-100 text-yellow-800 border-yellow-200",
                         };
                       case "REPROVADA":
-                        return { 
-                          icon: <X className="h-4 w-4" />, 
-                          text: "Reprovada", 
-                          className: "bg-red-100 text-red-800 border-red-200" 
+                        return {
+                          icon: <X className="h-4 w-4" />,
+                          text: "Reprovada",
+                          className: "bg-red-100 text-red-800 border-red-200",
                         };
                       default:
-                        return { 
-                          icon: "", 
-                          text: status, 
-                          className: "bg-gray-100 text-gray-800 border-gray-200" 
+                        return {
+                          icon: "",
+                          text: status,
+                          className:
+                            "bg-gray-100 text-gray-800 border-gray-200",
                         };
                     }
                   };
@@ -327,7 +353,10 @@ export const VehicleDetailingModal = ({
                   const statusConfig = getStatusConfig(invoice.status);
 
                   return (
-                    <div key={invoice.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+                    <div
+                      key={invoice.id}
+                      className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50"
+                    >
                       <div className="flex items-center gap-3">
                         <div className="flex-shrink-0 h-8 w-8">
                           <Badge className="h-8 w-8 bg-accent text-accent-foreground border border-accent-foreground/20">
@@ -339,7 +368,9 @@ export const VehicleDetailingModal = ({
                             Vistoria #{invoice.id}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {new Date(invoice.createdAt).toLocaleDateString('pt-BR')}
+                            {new Date(invoice.createdAt).toLocaleDateString(
+                              "pt-BR",
+                            )}
                           </div>
                         </div>
                       </div>
@@ -370,7 +401,9 @@ export const VehicleDetailingModal = ({
               </h3>
               <div className="text-center py-8">
                 <FileText className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">Nenhuma vistoria registrada para este veículo</p>
+                <p className="text-gray-500">
+                  Nenhuma vistoria registrada para este veículo
+                </p>
               </div>
             </div>
           )}
@@ -378,4 +411,4 @@ export const VehicleDetailingModal = ({
       </DialogContent>
     </Dialog>
   );
-}; 
+};

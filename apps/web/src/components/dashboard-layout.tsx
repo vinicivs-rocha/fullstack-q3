@@ -21,7 +21,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   if (meQuery.isError) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="text-lg text-red-600">Erro: {meQuery.error.message}</div>
+        <div className="text-lg text-red-600">
+          Erro: {meQuery.error.message}
+        </div>
       </div>
     );
   }
@@ -35,9 +37,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar user={user} onLogOut={logOut} />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {children}
-      </div>
+      <div className="flex-1 flex flex-col overflow-hidden">{children}</div>
     </div>
   );
 }

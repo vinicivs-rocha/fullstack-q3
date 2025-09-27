@@ -9,10 +9,19 @@ import { DataTable } from "@/components/ui/data-table";
 import { useInvoice } from "@/hooks/use-invoice";
 import { InvoicesListResponse } from "@fullstack-q3/contracts";
 import { PaginationState, Row } from "@tanstack/react-table";
-import { Car, Check, Clock, Download, Eye, Pencil, Plus, X } from "lucide-react";
+import {
+  Car,
+  Check,
+  Clock,
+  Download,
+  Eye,
+  Pencil,
+  Plus,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 
-export default function VistoriasPage() {  
+export default function VistoriasPage() {
   const {
     invoicesQuery,
     statsQuery,
@@ -39,7 +48,11 @@ export default function VistoriasPage() {
     {
       accessorKey: "vehicle.plate",
       header: "Veículo",
-      cell: ({ row }: {row: Row<InvoicesListResponse['invoices'][number]>}) => {
+      cell: ({
+        row,
+      }: {
+        row: Row<InvoicesListResponse["invoices"][number]>;
+      }) => {
         const vistoria = row.original;
         return (
           <div className="flex items-center">
@@ -53,7 +66,8 @@ export default function VistoriasPage() {
                 {vistoria.vehicle.plate}
               </div>
               <div className="text-sm text-gray-500">
-                {vistoria.vehicle.brand} {vistoria.vehicle.model} {vistoria.vehicle.year}
+                {vistoria.vehicle.brand} {vistoria.vehicle.model}{" "}
+                {vistoria.vehicle.year}
               </div>
             </div>
           </div>
@@ -63,22 +77,35 @@ export default function VistoriasPage() {
     {
       accessorKey: "createdAt",
       header: "Data",
-      cell: ({ row }: {row: Row<InvoicesListResponse['invoices'][number]>}) => {
+      cell: ({
+        row,
+      }: {
+        row: Row<InvoicesListResponse["invoices"][number]>;
+      }) => {
         const date = new Date(row.getValue("createdAt"));
-        return <div className="text-sm">{date.toLocaleDateString('pt-BR')}</div>;
+        return (
+          <div className="text-sm">{date.toLocaleDateString("pt-BR")}</div>
+        );
       },
     },
     {
       accessorKey: "surveyor.name",
       header: "Vistoriador",
-      cell: ({ row }: {row: Row<InvoicesListResponse['invoices'][number]>}) => {
+      cell: ({
+        row,
+      }: {
+        row: Row<InvoicesListResponse["invoices"][number]>;
+      }) => {
         const vistoria = row.original;
         return (
           <div className="flex items-center">
             <div className="flex-shrink-0 h-6 w-6">
               <div className="h-6 w-6 rounded-full bg-gray-300 flex items-center justify-center">
                 <span className="text-xs font-medium text-gray-700">
-                  {vistoria.surveyor.name.split(' ').map((n: string) => n[0]).join('')}
+                  {vistoria.surveyor.name
+                    .split(" ")
+                    .map((n: string) => n[0])
+                    .join("")}
                 </span>
               </div>
             </div>
@@ -94,24 +121,40 @@ export default function VistoriasPage() {
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }: {row: Row<InvoicesListResponse['invoices'][number]>}) => {
+      cell: ({
+        row,
+      }: {
+        row: Row<InvoicesListResponse["invoices"][number]>;
+      }) => {
         const status = row.getValue("status") as string;
-        
+
         const getStatusConfig = (status: string) => {
           switch (status) {
             case "APROVADA":
-              return { icon: <Check className="mr-2 h-4 w-4" />, text: "Aprovada", className: "text-green-600" };
+              return {
+                icon: <Check className="mr-2 h-4 w-4" />,
+                text: "Aprovada",
+                className: "text-green-600",
+              };
             case "PENDENTE":
-              return { icon: <Clock className="mr-2 h-4 w-4" />, text: "Pendente", className: "text-yellow-600" };
+              return {
+                icon: <Clock className="mr-2 h-4 w-4" />,
+                text: "Pendente",
+                className: "text-yellow-600",
+              };
             case "REPROVADA":
-              return { icon: <X className="mr-2 h-4 w-4" />, text: "Reprovada", className: "text-red-600" };
+              return {
+                icon: <X className="mr-2 h-4 w-4" />,
+                text: "Reprovada",
+                className: "text-red-600",
+              };
             default:
               return { icon: "", text: status, className: "text-gray-600" };
           }
         };
-  
+
         const config = getStatusConfig(status);
-        
+
         return (
           <div className="flex items-center">
             <Badge variant="secondary" className={`mr-2 ${config.className}`}>
@@ -125,9 +168,13 @@ export default function VistoriasPage() {
     {
       id: "actions",
       header: "Ações",
-      cell: ({ row }: {row: Row<InvoicesListResponse['invoices'][number]>}) => {
+      cell: ({
+        row,
+      }: {
+        row: Row<InvoicesListResponse["invoices"][number]>;
+      }) => {
         const invoice = row.original;
-  
+
         return (
           <div className="flex space-x-2">
             <Button
@@ -167,8 +214,12 @@ export default function VistoriasPage() {
     pageSize: 10,
   };
 
-  const handlePaginationChange = (updaterOrValue: PaginationState | ((old: PaginationState) => PaginationState)) => {
-    if (typeof updaterOrValue === 'function') {
+  const handlePaginationChange = (
+    updaterOrValue:
+      | PaginationState
+      | ((old: PaginationState) => PaginationState),
+  ) => {
+    if (typeof updaterOrValue === "function") {
       const newPagination = updaterOrValue(pagination);
       setPage(newPagination.pageIndex + 1);
     } else {
@@ -183,7 +234,9 @@ export default function VistoriasPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Vistorias</h1>
-            <p className="text-gray-600">Gerencie todas as vistorias realizadas</p>
+            <p className="text-gray-600">
+              Gerencie todas as vistorias realizadas
+            </p>
           </div>
           <Button asChild>
             <Link href="/vistorias/nova">
@@ -197,10 +250,12 @@ export default function VistoriasPage() {
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto p-6">
         {/* Search and Filters */}
-        <InvoicesSearch 
+        <InvoicesSearch
           status={status}
           onStatusChange={setStatus}
-          period={ startsAt && endsAt ? { start: startsAt, end: endsAt } : undefined }
+          period={
+            startsAt && endsAt ? { start: startsAt, end: endsAt } : undefined
+          }
           onPeriodChange={(period) => {
             if (period) {
               setStartsAt(period.start);
@@ -216,7 +271,17 @@ export default function VistoriasPage() {
 
         {/* Stats Cards */}
         <div className="mb-6">
-          <StatsCards stats={statsQuery.data ?? { total: 0, pending: 0, approved: 0, rejected: 0 }} isLoading={statsQuery.isLoading} />
+          <StatsCards
+            stats={
+              statsQuery.data ?? {
+                total: 0,
+                pending: 0,
+                approved: 0,
+                rejected: 0,
+              }
+            }
+            isLoading={statsQuery.isLoading}
+          />
         </div>
 
         {/* DataTable */}
@@ -224,9 +289,9 @@ export default function VistoriasPage() {
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-medium">Lista de Vistorias</h3>
           </div>
-          
-          <DataTable 
-            columns={columns} 
+
+          <DataTable
+            columns={columns}
             data={invoicesQuery.data?.invoices ?? []}
             onPaginationChange={handlePaginationChange}
             pagination={pagination}

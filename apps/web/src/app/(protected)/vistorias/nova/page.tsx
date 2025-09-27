@@ -2,7 +2,13 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Command,
   CommandEmpty,
@@ -35,15 +41,36 @@ import {
 import { TimePicker } from "@/components/ui/time-picker";
 import { useInvoice } from "@/hooks/use-invoice";
 import { cn } from "@/lib/utils";
-import { InvoiceCreationData, InvoiceCreationDataSchema, InvoiceStatus } from "@fullstack-q3/contracts";
+import {
+  InvoiceCreationData,
+  InvoiceCreationDataSchema,
+  InvoiceStatus,
+} from "@fullstack-q3/contracts";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Car, Check, CheckCircle, ChevronsUpDown, Clock, Loader2, Plus, X } from "lucide-react";
+import {
+  ArrowLeft,
+  Car,
+  Check,
+  CheckCircle,
+  ChevronsUpDown,
+  Clock,
+  Loader2,
+  Plus,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 export default function NovaVistoriaPage() {
-  const { vehiclesQuery, problemsQuery, createInvoiceMutation, newProblemInput, setNewProblemInput, isProblemsComboboxOpen, setIsProblemsComboboxOpen } = useInvoice();
-  
+  const {
+    vehiclesQuery,
+    problemsQuery,
+    createInvoiceMutation,
+    newProblemInput,
+    setNewProblemInput,
+    isProblemsComboboxOpen,
+    setIsProblemsComboboxOpen,
+  } = useInvoice();
 
   const form = useForm<InvoiceCreationData>({
     resolver: zodResolver(InvoiceCreationDataSchema),
@@ -90,7 +117,9 @@ export default function NovaVistoriaPage() {
         <div className="flex items-center">
           <div className="flex items-center justify-between w-full">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Nova Vistoria</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Nova Vistoria
+              </h1>
               <p className="text-gray-600">Criar uma nova vistoria veicular</p>
             </div>
             <Link href="/vistorias">
@@ -107,7 +136,12 @@ export default function NovaVistoriaPage() {
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-7xl mx-auto">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit((data) => createInvoiceMutation.mutate(data))} className="space-y-6">
+            <form
+              onSubmit={form.handleSubmit((data) =>
+                createInvoiceMutation.mutate(data),
+              )}
+              className="space-y-6"
+            >
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Informações do Veículo */}
                 <Card>
@@ -127,7 +161,11 @@ export default function NovaVistoriaPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Veículo</FormLabel>
-                          <Select onValueChange={(value) => field.onChange(parseInt(value))}>
+                          <Select
+                            onValueChange={(value) =>
+                              field.onChange(parseInt(value))
+                            }
+                          >
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Selecione um veículo" />
@@ -135,13 +173,20 @@ export default function NovaVistoriaPage() {
                             </FormControl>
                             <SelectContent>
                               {vehiclesQuery.data?.map((vehicle) => (
-                                <SelectItem key={vehicle.id} value={vehicle.id.toString()}>
+                                <SelectItem
+                                  key={vehicle.id}
+                                  value={vehicle.id.toString()}
+                                >
                                   <div className="flex items-center space-x-2">
-                                    <Badge variant="outline" className="text-xs">
+                                    <Badge
+                                      variant="outline"
+                                      className="text-xs"
+                                    >
                                       {vehicle.plate}
                                     </Badge>
                                     <span>
-                                      {vehicle.brand} {vehicle.model} ({vehicle.year})
+                                      {vehicle.brand} {vehicle.model} (
+                                      {vehicle.year})
                                     </span>
                                   </div>
                                 </SelectItem>
@@ -170,16 +215,27 @@ export default function NovaVistoriaPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Status</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Selecione o status" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {(["PENDENTE", "APROVADA", "REPROVADA"] as InvoiceStatus[]).map((status) => (
+                              {(
+                                [
+                                  "PENDENTE",
+                                  "APROVADA",
+                                  "REPROVADA",
+                                ] as InvoiceStatus[]
+                              ).map((status) => (
                                 <SelectItem key={status} value={status}>
-                                  <div className={`flex items-center space-x-2 px-2 py-1 rounded ${getStatusColor(status)}`}>
+                                  <div
+                                    className={`flex items-center space-x-2 px-2 py-1 rounded ${getStatusColor(status)}`}
+                                  >
                                     {getStatusIcon(status)}
                                     <span>{status}</span>
                                   </div>
@@ -200,9 +256,7 @@ export default function NovaVistoriaPage() {
                           <FormItem>
                             <FormLabel>Preço</FormLabel>
                             <FormControl>
-                              <CurrencyInput
-                                {...field}
-                              />
+                              <CurrencyInput {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -246,7 +300,10 @@ export default function NovaVistoriaPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Problemas</FormLabel>
-                        <Popover open={isProblemsComboboxOpen} onOpenChange={setIsProblemsComboboxOpen}>
+                        <Popover
+                          open={isProblemsComboboxOpen}
+                          onOpenChange={setIsProblemsComboboxOpen}
+                        >
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
@@ -264,15 +321,17 @@ export default function NovaVistoriaPage() {
                           </PopoverTrigger>
                           <PopoverContent className="w-full p-0" align="start">
                             <Command>
-                              <CommandInput 
-                                placeholder="Buscar problemas..." 
+                              <CommandInput
+                                placeholder="Buscar problemas..."
                                 value={newProblemInput}
                                 onValueChange={setNewProblemInput}
                               />
                               <CommandList>
                                 <CommandEmpty>
                                   <div className="py-6 text-center text-sm">
-                                    <p className="mb-2">Nenhum problema encontrado.</p>
+                                    <p className="mb-2">
+                                      Nenhum problema encontrado.
+                                    </p>
                                     {newProblemInput.trim() && (
                                       <Button
                                         variant="outline"
@@ -280,14 +339,15 @@ export default function NovaVistoriaPage() {
                                         onClick={() => {
                                           const newProblems = [
                                             ...field.value,
-                                            { label: newProblemInput.trim() }
-                                          ]
-                                          field.onChange(newProblems)
+                                            { label: newProblemInput.trim() },
+                                          ];
+                                          field.onChange(newProblems);
                                         }}
                                         className="gap-2"
                                       >
                                         <Plus className="h-4 w-4" />
-                                        Adicionar &quot;{newProblemInput.trim()}&quot;
+                                        Adicionar &quot;{newProblemInput.trim()}
+                                        &quot;
                                       </Button>
                                     )}
                                   </div>
@@ -295,7 +355,8 @@ export default function NovaVistoriaPage() {
                                 <CommandGroup>
                                   {problemsQuery.data?.map((problem) => {
                                     const isSelected = field.value.some(
-                                      (selectedProblem) => selectedProblem.id === problem.id
+                                      (selectedProblem) =>
+                                        selectedProblem.id === problem.id,
                                     );
                                     return (
                                       <CommandItem
@@ -303,14 +364,20 @@ export default function NovaVistoriaPage() {
                                         value={problem.label}
                                         onSelect={() => {
                                           if (isSelected) {
-                                            const newProblems = field.value.filter(
-                                              (selectedProblem) => selectedProblem.id !== problem.id
-                                            );
+                                            const newProblems =
+                                              field.value.filter(
+                                                (selectedProblem) =>
+                                                  selectedProblem.id !==
+                                                  problem.id,
+                                              );
                                             field.onChange(newProblems);
                                           } else {
                                             const newProblems = [
                                               ...field.value,
-                                              { id: problem.id, label: problem.label }
+                                              {
+                                                id: problem.id,
+                                                label: problem.label,
+                                              },
                                             ];
                                             field.onChange(newProblems);
                                           }
@@ -319,7 +386,9 @@ export default function NovaVistoriaPage() {
                                         <Check
                                           className={cn(
                                             "mr-2 h-4 w-4",
-                                            isSelected ? "opacity-100" : "opacity-0"
+                                            isSelected
+                                              ? "opacity-100"
+                                              : "opacity-0",
                                           )}
                                         />
                                         {problem.label}
@@ -331,7 +400,7 @@ export default function NovaVistoriaPage() {
                             </Command>
                           </PopoverContent>
                         </Popover>
-                        
+
                         {/* Mostrar problemas selecionados */}
                         {field.value.length > 0 && (
                           <div className="mt-3 flex flex-wrap gap-2">
@@ -346,7 +415,8 @@ export default function NovaVistoriaPage() {
                                   type="button"
                                   onClick={() => {
                                     const newProblems = field.value.filter(
-                                      (selectedProblem) => selectedProblem.id !== problem.id
+                                      (selectedProblem) =>
+                                        selectedProblem.id !== problem.id,
                                     );
                                     field.onChange(newProblems);
                                   }}
@@ -400,8 +470,8 @@ export default function NovaVistoriaPage() {
                     Cancelar
                   </Button>
                 </Link>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={createInvoiceMutation.isPending}
                   className="min-w-[120px]"
                 >

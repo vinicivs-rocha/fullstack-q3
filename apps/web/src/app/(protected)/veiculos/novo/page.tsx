@@ -2,7 +2,13 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -20,9 +26,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useVehicle } from "@/hooks/use-vehicle";
-import { FuelType, VehicleCreationData, VehicleCreationDataSchema } from "@fullstack-q3/contracts";
+import {
+  FuelType,
+  VehicleCreationData,
+  VehicleCreationDataSchema,
+} from "@fullstack-q3/contracts";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Calendar, Car, Gauge, Hash, Mail, Palette, User } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  Car,
+  Gauge,
+  Hash,
+  Mail,
+  Palette,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
@@ -58,13 +77,16 @@ export default function NovoVeiculoPage() {
 
   const formatPlate = (value: string) => {
     const cleaned = value.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
-    
+
     if (cleaned.length <= 3) {
       return cleaned;
     } else if (cleaned.length <= 7) {
       return cleaned.replace(/^([A-Z]{3})([0-9]+)$/, "$1-$2");
     } else {
-      return cleaned.replace(/^([A-Z]{3})([0-9])([A-Z])([0-9]{2})$/, "$1$2$3$4");
+      return cleaned.replace(
+        /^([A-Z]{3})([0-9])([A-Z])([0-9]{2})$/,
+        "$1$2$3$4",
+      );
     }
   };
 
@@ -76,7 +98,9 @@ export default function NovoVeiculoPage() {
           <div className="flex items-center justify-between w-full">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Novo Veículo</h1>
-              <p className="text-gray-600">Cadastrar um novo veículo no sistema</p>
+              <p className="text-gray-600">
+                Cadastrar um novo veículo no sistema
+              </p>
             </div>
             <Link href="/veiculos">
               <Button variant="ghost" size="sm">
@@ -101,9 +125,7 @@ export default function NovoVeiculoPage() {
                       <Car className="mr-2 h-5 w-5" />
                       Informações do Veículo
                     </CardTitle>
-                    <CardDescription>
-                      Dados básicos do veículo
-                    </CardDescription>
+                    <CardDescription>Dados básicos do veículo</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
@@ -144,7 +166,12 @@ export default function NovoVeiculoPage() {
                                 type="number"
                                 placeholder="2024"
                                 {...field}
-                                onChange={(e) => field.onChange(parseInt(e.target.value) || new Date().getFullYear())}
+                                onChange={(e) =>
+                                  field.onChange(
+                                    parseInt(e.target.value) ||
+                                      new Date().getFullYear(),
+                                  )
+                                }
                                 min={new Date().getFullYear() - 100}
                                 max={new Date().getFullYear() + 1}
                                 defaultValue={new Date().getFullYear()}
@@ -211,7 +238,10 @@ export default function NovoVeiculoPage() {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Combustível</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
                               <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Selecione o tipo de combustível" />
@@ -219,7 +249,10 @@ export default function NovoVeiculoPage() {
                               </FormControl>
                               <SelectContent>
                                 {fuelTypeOptions.map((option) => (
-                                  <SelectItem key={option.value} value={option.value}>
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                  >
                                     {option.label}
                                   </SelectItem>
                                 ))}
@@ -241,9 +274,9 @@ export default function NovoVeiculoPage() {
                             Número do Chassi
                           </FormLabel>
                           <FormControl>
-                            <Input 
-                              placeholder="9BWZZZZ377VT004251" 
-                              {...field} 
+                            <Input
+                              placeholder="9BWZZZZ377VT004251"
+                              {...field}
                               className="font-mono"
                               maxLength={17}
                             />
@@ -263,11 +296,17 @@ export default function NovoVeiculoPage() {
                             Quilometragem (opcional)
                           </FormLabel>
                           <FormControl>
-                            <Input 
+                            <Input
                               type="number"
                               placeholder="50000"
                               {...field}
-                              onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                              onChange={(e) =>
+                                field.onChange(
+                                  e.target.value
+                                    ? parseInt(e.target.value)
+                                    : undefined,
+                                )
+                              }
                             />
                           </FormControl>
                           <FormMessage />
@@ -316,10 +355,10 @@ export default function NovoVeiculoPage() {
                             E-mail
                           </FormLabel>
                           <FormControl>
-                            <Input 
+                            <Input
                               type="email"
-                              placeholder="joao@email.com" 
-                              {...field} 
+                              placeholder="joao@email.com"
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
@@ -329,7 +368,9 @@ export default function NovoVeiculoPage() {
 
                     {/* Preview do veículo */}
                     <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                      <h4 className="text-sm font-medium text-gray-700 mb-3">Preview do Cadastro</h4>
+                      <h4 className="text-sm font-medium text-gray-700 mb-3">
+                        Preview do Cadastro
+                      </h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center justify-between">
                           <span className="text-gray-500">Placa:</span>
@@ -340,12 +381,16 @@ export default function NovoVeiculoPage() {
                         <div className="flex items-center justify-between">
                           <span className="text-gray-500">Veículo:</span>
                           <span>
-                            {form.watch("brand") || "Marca"} {form.watch("model") || "Modelo"} ({form.watch("year") || "Ano"})
+                            {form.watch("brand") || "Marca"}{" "}
+                            {form.watch("model") || "Modelo"} (
+                            {form.watch("year") || "Ano"})
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-gray-500">Proprietário:</span>
-                          <span>{form.watch("proprietary.name") || "Nome"}</span>
+                          <span>
+                            {form.watch("proprietary.name") || "Nome"}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -360,10 +405,7 @@ export default function NovoVeiculoPage() {
                     Cancelar
                   </Button>
                 </Link>
-                <Button 
-                  type="submit" 
-                  className="min-w-[120px]"
-                >
+                <Button type="submit" className="min-w-[120px]">
                   <Car className="mr-2 h-4 w-4" />
                   Cadastrar Veículo
                 </Button>

@@ -2,14 +2,21 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { VehicleService } from "@/services/vehicle.service";
 import { container } from "@/lib/di-container";
 import { TYPES } from "@/lib/di-types";
-import { VehicleCreationData, VehicleCreationDataSchema, VehiclePaginatedListFiltersSchema, VehicleStatus, VehicleUpdatingData, VehicleUpdatingDataSchema } from "@fullstack-q3/contracts";
+import {
+  VehicleCreationData,
+  VehicleCreationDataSchema,
+  VehiclePaginatedListFiltersSchema,
+  VehicleStatus,
+  VehicleUpdatingData,
+  VehicleUpdatingDataSchema,
+} from "@fullstack-q3/contracts";
 import { useEffect, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export const useVehicle = (
-    vehicleService: VehicleService = container.get(TYPES.VehicleService),
+  vehicleService: VehicleService = container.get(TYPES.VehicleService),
 ) => {
   const { id } = useParams();
   const router = useRouter();
@@ -22,85 +29,108 @@ export const useVehicle = (
   const [year, setYear] = useState<number | undefined>(undefined);
   const [brand, setBrand] = useState<string | undefined>(undefined);
   const [search, setSearch] = useState<string | undefined>(undefined);
-  const [debouncedSearch, setDebouncedSearch] = useState<string | undefined>(undefined);
-  const [vehicleId, setVehicleId] = useState<number | undefined>(id ? parseInt(id as string) : undefined);
+  const [debouncedSearch, setDebouncedSearch] = useState<string | undefined>(
+    undefined,
+  );
+  const [vehicleId, setVehicleId] = useState<number | undefined>(
+    id ? parseInt(id as string) : undefined,
+  );
   const [isDetailing, setIsDetailing] = useState(false);
 
   const vehiclesYearsQuery = useQuery({
-    queryKey: ['vehicles-years'],
+    queryKey: ["vehicles-years"],
     queryFn: () => vehicleService.listYears(),
   });
 
   const vehiclesBrandsQuery = useQuery({
-    queryKey: ['vehicles-brands'],
+    queryKey: ["vehicles-brands"],
     queryFn: () => vehicleService.listBrands(),
   });
 
   const vehiclesCountsQuery = useQuery({
-    queryKey: ['vehicles-counts'],
+    queryKey: ["vehicles-counts"],
     queryFn: () => vehicleService.getCounts(),
   });
 
   const vehiclesPaginatedListQuery = useQuery({
-    queryKey: ['vehicles-paginated-list', pagination, status, year, brand, debouncedSearch],
-    queryFn: () => vehicleService.paginatedList(VehiclePaginatedListFiltersSchema.parse({ page: pagination.pageIndex + 1, limit: pagination.pageSize, status, year, brand, search: debouncedSearch })),
+    queryKey: [
+      "vehicles-paginated-list",
+      pagination,
+      status,
+      year,
+      brand,
+      debouncedSearch,
+    ],
+    queryFn: () =>
+      vehicleService.paginatedList(
+        VehiclePaginatedListFiltersSchema.parse({
+          page: pagination.pageIndex + 1,
+          limit: pagination.pageSize,
+          status,
+          year,
+          brand,
+          search: debouncedSearch,
+        }),
+      ),
   });
 
   const vehicleDetailsQuery = useQuery({
-    queryKey: ['vehicle-detail', vehicleId],
+    queryKey: ["vehicle-detail", vehicleId],
     queryFn: () => vehicleService.detail(vehicleId!),
     enabled: !!vehicleId,
   });
 
   const vehicleCreateMutation = useMutation({
-    mutationKey: ['vehicle-create'],
-    mutationFn: (vehicle: VehicleCreationData) => vehicleService.create(VehicleCreationDataSchema.parse(vehicle)),
+    mutationKey: ["vehicle-create"],
+    mutationFn: (vehicle: VehicleCreationData) =>
+      vehicleService.create(VehicleCreationDataSchema.parse(vehicle)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['vehicles-paginated-list'] });
-      queryClient.invalidateQueries({ queryKey: ['vehicles-counts'] });
-      queryClient.invalidateQueries({ queryKey: ['vehicles-years'] });
-      queryClient.invalidateQueries({ queryKey: ['vehicles-brands'] });
-      toast.success('Veículo criado com sucesso');
+      queryClient.invalidateQueries({ queryKey: ["vehicles-paginated-list"] });
+      queryClient.invalidateQueries({ queryKey: ["vehicles-counts"] });
+      queryClient.invalidateQueries({ queryKey: ["vehicles-years"] });
+      queryClient.invalidateQueries({ queryKey: ["vehicles-brands"] });
+      toast.success("Veículo criado com sucesso");
       router.push("/veiculos");
     },
     onError: (error) => {
       console.error(error);
-      toast.error('Erro ao criar veículo');
-    }
+      toast.error("Erro ao criar veículo");
+    },
   });
 
   const vehicleUpdateMutation = useMutation({
-    mutationKey: ['vehicle-update'],
-    mutationFn: ({id, ...vehicle}: VehicleUpdatingData & {id: number}) => vehicleService.update(id, VehicleUpdatingDataSchema.parse(vehicle)),
+    mutationKey: ["vehicle-update"],
+    mutationFn: ({ id, ...vehicle }: VehicleUpdatingData & { id: number }) =>
+      vehicleService.update(id, VehicleUpdatingDataSchema.parse(vehicle)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['vehicles-paginated-list'] });
-      queryClient.invalidateQueries({ queryKey: ['vehicles-counts'] });
-      queryClient.invalidateQueries({ queryKey: ['vehicles-years'] });
-      queryClient.invalidateQueries({ queryKey: ['vehicles-brands'] });
-      toast.success('Veículo atualizado com sucesso');
+      queryClient.invalidateQueries({ queryKey: ["vehicles-paginated-list"] });
+      queryClient.invalidateQueries({ queryKey: ["vehicles-counts"] });
+      queryClient.invalidateQueries({ queryKey: ["vehicles-years"] });
+      queryClient.invalidateQueries({ queryKey: ["vehicles-brands"] });
+      toast.success("Veículo atualizado com sucesso");
       router.push("/veiculos");
     },
     onError: (error) => {
       console.error(error);
-      toast.error('Erro ao atualizar veículo');
-    }
+      toast.error("Erro ao atualizar veículo");
+    },
   });
 
   const vehicleDeleteMutation = useMutation({
-    mutationKey: ['vehicle-delete'],
+    mutationKey: ["vehicle-delete"],
     mutationFn: (id: number) => vehicleService.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['vehicles-paginated-list'] });
-      queryClient.invalidateQueries({ queryKey: ['vehicles-counts'] });
-      queryClient.invalidateQueries({ queryKey: ['vehicles-years'] });
-      queryClient.invalidateQueries({ queryKey: ['vehicles-brands'] });
-      toast.success('Veículo deletado com sucesso');
+      queryClient.invalidateQueries({ queryKey: ["vehicles-paginated-list"] });
+      queryClient.invalidateQueries({ queryKey: ["vehicles-counts"] });
+      queryClient.invalidateQueries({ queryKey: ["vehicles-years"] });
+      queryClient.invalidateQueries({ queryKey: ["vehicles-brands"] });
+      toast.success("Veículo deletado com sucesso");
       router.push("/veiculos");
     },
     onError: (error) => {
       console.error(error);
-      toast.error('Erro ao deletar veículo');
-    }
+      toast.error("Erro ao deletar veículo");
+    },
   });
 
   useEffect(() => {
@@ -116,8 +146,12 @@ export const useVehicle = (
     vehiclesCountsQuery,
     vehiclesPaginatedListQuery,
     pagination,
-    onPaginationChange: (updaterOrValue: PaginationState | ((old: PaginationState) => PaginationState)) => {
-      if (typeof updaterOrValue === 'function') {
+    onPaginationChange: (
+      updaterOrValue:
+        | PaginationState
+        | ((old: PaginationState) => PaginationState),
+    ) => {
+      if (typeof updaterOrValue === "function") {
         const newPagination = updaterOrValue(pagination);
         setPagination(newPagination);
       } else {
@@ -144,8 +178,10 @@ export const useVehicle = (
     setBrand,
     search,
     setSearch,
-    create: (vehicle: VehicleCreationData) => vehicleCreateMutation.mutate(vehicle),
-    update: (id: number, vehicle: VehicleUpdatingData) => vehicleUpdateMutation.mutate({id, ...vehicle}),
+    create: (vehicle: VehicleCreationData) =>
+      vehicleCreateMutation.mutate(vehicle),
+    update: (id: number, vehicle: VehicleUpdatingData) =>
+      vehicleUpdateMutation.mutate({ id, ...vehicle }),
     delete: (id: number) => vehicleDeleteMutation.mutate(id),
   };
 };

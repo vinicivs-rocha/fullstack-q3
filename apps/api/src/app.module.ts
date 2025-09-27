@@ -20,6 +20,7 @@ import VehicleFactory from './seeds/factories/vehicle.factory';
 import { InvoiceSeeder } from './seeds/seeders/invoice.seeder';
 import { SurveyorSeeder } from './seeds/seeders/surveyor.seeder';
 import { SurveyorModule } from './surveyor/surveyor.module';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { SurveyorModule } from './surveyor/surveyor.module';
     InvoicesModule,
     SurveyorModule,
     AuthModule,
+    ReportsModule,
   ],
   controllers: [],
   providers: [],

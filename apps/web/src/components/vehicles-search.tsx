@@ -2,9 +2,20 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { VehicleStatus } from "@fullstack-q3/contracts";
 import { Check, ChevronsUpDown, Clock, Search, X } from "lucide-react";
 import { useState } from "react";
@@ -23,23 +34,31 @@ interface VehiclesSearchProps {
   isLoading?: boolean;
 }
 
-const statusOptions: { value: VehicleStatus, label: string, icon: React.ReactNode }[] = [
+const statusOptions: {
+  value: VehicleStatus;
+  label: string;
+  icon: React.ReactNode;
+}[] = [
   { value: "ATIVO", label: "Ativos", icon: <Check className="mr-2 h-4 w-4" /> },
-  { value: "PENDENTE", label: "Pendentes", icon: <Clock className="mr-2 h-4 w-4" /> },
+  {
+    value: "PENDENTE",
+    label: "Pendentes",
+    icon: <Clock className="mr-2 h-4 w-4" />,
+  },
   { value: "INATIVO", label: "Inativos", icon: <X className="mr-2 h-4 w-4" /> },
 ];
 
-export function VehiclesSearch({ 
-  status, 
-  onStatusChange, 
-  year, 
-  onYearChange, 
-  brand, 
-  onBrandChange, 
-  search, 
+export function VehiclesSearch({
+  status,
+  onStatusChange,
+  year,
+  onYearChange,
+  brand,
+  onBrandChange,
+  search,
   onSearchChange,
   years,
-  brands, 
+  brands,
 }: VehiclesSearchProps) {
   const [statusOpen, setStatusOpen] = useState(false);
   const [yearOpen, setYearOpen] = useState(false);
@@ -56,10 +75,14 @@ export function VehiclesSearch({
 
   const getStatusLabel = () => {
     switch (status) {
-      case "ATIVO": return "Ativos";
-      case "PENDENTE": return "Pendentes";
-      case "INATIVO": return "Inativos";
-      default: return "Status";
+      case "ATIVO":
+        return "Ativos";
+      case "PENDENTE":
+        return "Pendentes";
+      case "INATIVO":
+        return "Inativos";
+      default:
+        return "Status";
     }
   };
 
@@ -80,7 +103,7 @@ export function VehiclesSearch({
               />
             </div>
           </div>
-          
+
           {/* Filtros */}
           <div className="flex gap-2">
             {/* Filtro de Status */}
@@ -210,36 +233,50 @@ export function VehiclesSearch({
         {getActiveFiltersCount() > 0 ? (
           <div className="flex flex-wrap gap-2 mt-4">
             {search && (
-              <Badge variant="secondary" className="gap-1" onClick={() => onSearchChange(undefined)}>
+              <Badge
+                variant="secondary"
+                className="gap-1"
+                onClick={() => onSearchChange(undefined)}
+              >
                 Busca: {search}
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
+                <X
+                  className="h-3 w-3 cursor-pointer"
                   onClick={() => onSearchChange(undefined)}
                 />
               </Badge>
             )}
             {status && (
-              <Badge variant="secondary" className="gap-1" onClick={() => onStatusChange(undefined)}>
+              <Badge
+                variant="secondary"
+                className="gap-1"
+                onClick={() => onStatusChange(undefined)}
+              >
                 Status: {getStatusLabel()}
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
+                <X
+                  className="h-3 w-3 cursor-pointer"
                   onClick={() => onStatusChange(undefined)}
                 />
               </Badge>
             )}
             {year && (
-                <Badge variant="secondary" className="gap-1" onClick={() => onYearChange(undefined)}>
+              <Badge
+                variant="secondary"
+                className="gap-1"
+                onClick={() => onYearChange(undefined)}
+              >
                 Ano: {year}
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
-                />
+                <X className="h-3 w-3 cursor-pointer" />
               </Badge>
             )}
             {brand && (
-              <Badge variant="secondary" className="gap-1" onClick={() => onBrandChange(undefined)}>
+              <Badge
+                variant="secondary"
+                className="gap-1"
+                onClick={() => onBrandChange(undefined)}
+              >
                 Marca: {brand}
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
+                <X
+                  className="h-3 w-3 cursor-pointer"
                   onClick={() => onBrandChange(undefined)}
                 />
               </Badge>
@@ -249,4 +286,4 @@ export function VehiclesSearch({
       </div>
     </div>
   );
-} 
+}

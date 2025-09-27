@@ -2,81 +2,100 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import { CurrencyInput } from "@/components/ui/currency-input";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TimePicker } from "@/components/ui/time-picker";
 import { useInvoice } from "@/hooks/use-invoice";
 import { cn } from "@/lib/utils";
-import { InvoiceStatus, InvoiceUpdateData, InvoiceUpdateDataSchema } from "@fullstack-q3/contracts";
+import {
+  InvoiceStatus,
+  InvoiceUpdateData,
+  InvoiceUpdateDataSchema,
+} from "@fullstack-q3/contracts";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Car, Check, CheckCircle, ChevronsUpDown, Clock, Loader2, Plus, X } from "lucide-react";
+import {
+  ArrowLeft,
+  Car,
+  Check,
+  CheckCircle,
+  ChevronsUpDown,
+  Clock,
+  Loader2,
+  Plus,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 export default function EditarVistoriaPage() {
-  const { 
-    vehiclesQuery, 
-    problemsQuery, 
-    updateInvoice, 
+  const {
+    vehiclesQuery,
+    problemsQuery,
+    updateInvoice,
     invoiceDetailsQuery,
-    newProblemInput, 
-    setNewProblemInput, 
-    isProblemsComboboxOpen, 
+    newProblemInput,
+    setNewProblemInput,
+    isProblemsComboboxOpen,
     setIsProblemsComboboxOpen,
     updateInvoiceMutation,
   } = useInvoice();
 
-  
   const form = useForm<InvoiceUpdateData>({
-      resolver: zodResolver(InvoiceUpdateDataSchema),
-      defaultValues: {
-          vehicleId: 0,
-          problems: [],
-          status: "PENDENTE",
-          price: 0,
-          duration: 0,
-          observation: "",
-        },
-    });
-    
+    resolver: zodResolver(InvoiceUpdateDataSchema),
+    defaultValues: {
+      vehicleId: 0,
+      problems: [],
+      status: "PENDENTE",
+      price: 0,
+      duration: 0,
+      observation: "",
+    },
+  });
+
   useEffect(() => {
     if (invoiceDetailsQuery.data) {
       const invoice = invoiceDetailsQuery.data;
       form.reset({
         vehicleId: invoice.vehicle.id,
-        problems: invoice.problems.map(problem => ({
+        problems: invoice.problems.map((problem) => ({
           id: problem.id,
-          label: problem.label
+          label: problem.label,
         })),
         status: invoice.status,
         price: invoice.price,
@@ -141,9 +160,12 @@ export default function EditarVistoriaPage() {
         <div className="flex items-center">
           <div className="flex items-center justify-between w-full">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Editar Vistoria</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Editar Vistoria
+              </h1>
               <p className="text-gray-600">
-                Editando vistoria do veículo {invoiceDetailsQuery.data?.vehicle.plate}
+                Editando vistoria do veículo{" "}
+                {invoiceDetailsQuery.data?.vehicle.plate}
               </p>
             </div>
             <Link href="/vistorias">
@@ -160,7 +182,10 @@ export default function EditarVistoriaPage() {
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-7xl mx-auto">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(updateInvoice)} className="space-y-6">
+            <form
+              onSubmit={form.handleSubmit(updateInvoice)}
+              className="space-y-6"
+            >
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Informações do Veículo */}
                 <Card>
@@ -184,7 +209,11 @@ export default function EditarVistoriaPage() {
                             <Skeleton className="h-9 w-full" />
                           ) : (
                             <Select
-                              onValueChange={(value) => value ? field.onChange(parseInt(value)) : undefined} 
+                              onValueChange={(value) =>
+                                value
+                                  ? field.onChange(parseInt(value))
+                                  : undefined
+                              }
                               value={field.value.toString()}
                             >
                               <FormControl>
@@ -194,13 +223,20 @@ export default function EditarVistoriaPage() {
                               </FormControl>
                               <SelectContent>
                                 {vehiclesQuery.data.map((vehicle) => (
-                                  <SelectItem key={vehicle.id.toString()} value={vehicle.id.toString()}>
+                                  <SelectItem
+                                    key={vehicle.id.toString()}
+                                    value={vehicle.id.toString()}
+                                  >
                                     <div className="flex items-center space-x-2">
-                                      <Badge variant="outline" className="text-xs">
+                                      <Badge
+                                        variant="outline"
+                                        className="text-xs"
+                                      >
                                         {vehicle.plate}
                                       </Badge>
                                       <span>
-                                        {vehicle.brand} {vehicle.model} ({vehicle.year})
+                                        {vehicle.brand} {vehicle.model} (
+                                        {vehicle.year})
                                       </span>
                                     </div>
                                   </SelectItem>
@@ -233,16 +269,29 @@ export default function EditarVistoriaPage() {
                           {invoiceDetailsQuery.isLoading ? (
                             <Skeleton className="h-9 w-full" />
                           ) : (
-                            <Select onValueChange={(value) => value ? field.onChange(value) : undefined} value={field.value}>
+                            <Select
+                              onValueChange={(value) =>
+                                value ? field.onChange(value) : undefined
+                              }
+                              value={field.value}
+                            >
                               <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Selecione o status" />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                {(["PENDENTE", "APROVADA", "REPROVADA"] as InvoiceStatus[]).map((status) => (
+                                {(
+                                  [
+                                    "PENDENTE",
+                                    "APROVADA",
+                                    "REPROVADA",
+                                  ] as InvoiceStatus[]
+                                ).map((status) => (
                                   <SelectItem key={status} value={status}>
-                                    <div className={`flex items-center space-x-2 px-2 py-1 rounded ${getStatusColor(status)}`}>
+                                    <div
+                                      className={`flex items-center space-x-2 px-2 py-1 rounded ${getStatusColor(status)}`}
+                                    >
                                       {getStatusIcon(status)}
                                       <span>{status}</span>
                                     </div>
@@ -264,9 +313,7 @@ export default function EditarVistoriaPage() {
                           <FormItem>
                             <FormLabel>Preço</FormLabel>
                             <FormControl>
-                              <CurrencyInput
-                                {...field}
-                              />
+                              <CurrencyInput {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -310,7 +357,10 @@ export default function EditarVistoriaPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Problemas</FormLabel>
-                        <Popover open={isProblemsComboboxOpen} onOpenChange={setIsProblemsComboboxOpen}>
+                        <Popover
+                          open={isProblemsComboboxOpen}
+                          onOpenChange={setIsProblemsComboboxOpen}
+                        >
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
@@ -328,15 +378,17 @@ export default function EditarVistoriaPage() {
                           </PopoverTrigger>
                           <PopoverContent className="w-full p-0" align="start">
                             <Command>
-                              <CommandInput 
-                                placeholder="Buscar problemas..." 
+                              <CommandInput
+                                placeholder="Buscar problemas..."
                                 value={newProblemInput}
                                 onValueChange={setNewProblemInput}
                               />
                               <CommandList>
                                 <CommandEmpty>
                                   <div className="py-6 text-center text-sm">
-                                    <p className="mb-2">Nenhum problema encontrado.</p>
+                                    <p className="mb-2">
+                                      Nenhum problema encontrado.
+                                    </p>
                                     {newProblemInput.trim() && (
                                       <Button
                                         variant="outline"
@@ -344,14 +396,15 @@ export default function EditarVistoriaPage() {
                                         onClick={() => {
                                           const newProblems = [
                                             ...field.value,
-                                            { label: newProblemInput.trim() }
-                                          ]
-                                          field.onChange(newProblems)
+                                            { label: newProblemInput.trim() },
+                                          ];
+                                          field.onChange(newProblems);
                                         }}
                                         className="gap-2"
                                       >
                                         <Plus className="h-4 w-4" />
-                                        Adicionar &quot;{newProblemInput.trim()}&quot;
+                                        Adicionar &quot;{newProblemInput.trim()}
+                                        &quot;
                                       </Button>
                                     )}
                                   </div>
@@ -359,7 +412,8 @@ export default function EditarVistoriaPage() {
                                 <CommandGroup>
                                   {problemsQuery.data?.map((problem) => {
                                     const isSelected = field.value.some(
-                                      (selectedProblem) => selectedProblem.id === problem.id
+                                      (selectedProblem) =>
+                                        selectedProblem.id === problem.id,
                                     );
                                     return (
                                       <CommandItem
@@ -367,14 +421,20 @@ export default function EditarVistoriaPage() {
                                         value={problem.label}
                                         onSelect={() => {
                                           if (isSelected) {
-                                            const newProblems = field.value.filter(
-                                              (selectedProblem) => selectedProblem.id !== problem.id
-                                            );
+                                            const newProblems =
+                                              field.value.filter(
+                                                (selectedProblem) =>
+                                                  selectedProblem.id !==
+                                                  problem.id,
+                                              );
                                             field.onChange(newProblems);
                                           } else {
                                             const newProblems = [
                                               ...field.value,
-                                              { id: problem.id, label: problem.label }
+                                              {
+                                                id: problem.id,
+                                                label: problem.label,
+                                              },
                                             ];
                                             field.onChange(newProblems);
                                           }
@@ -383,7 +443,9 @@ export default function EditarVistoriaPage() {
                                         <Check
                                           className={cn(
                                             "mr-2 h-4 w-4",
-                                            isSelected ? "opacity-100" : "opacity-0"
+                                            isSelected
+                                              ? "opacity-100"
+                                              : "opacity-0",
                                           )}
                                         />
                                         {problem.label}
@@ -395,7 +457,7 @@ export default function EditarVistoriaPage() {
                             </Command>
                           </PopoverContent>
                         </Popover>
-                        
+
                         {/* Mostrar problemas selecionados */}
                         {field.value.length > 0 && (
                           <div className="mt-3 flex flex-wrap gap-2">
@@ -410,7 +472,7 @@ export default function EditarVistoriaPage() {
                                   type="button"
                                   onClick={() => {
                                     const newProblems = field.value.filter(
-                                      (_, i) => i !== index
+                                      (_, i) => i !== index,
                                     );
                                     field.onChange(newProblems);
                                   }}
@@ -464,8 +526,8 @@ export default function EditarVistoriaPage() {
                     Cancelar
                   </Button>
                 </Link>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={updateInvoiceMutation.isPending}
                   className="min-w-[120px]"
                 >
@@ -485,4 +547,4 @@ export default function EditarVistoriaPage() {
       </div>
     </>
   );
-} 
+}
