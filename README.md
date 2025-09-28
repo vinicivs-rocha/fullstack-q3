@@ -113,6 +113,7 @@ docker-compose -f docker-compose.dev.yml up --build
 ```
 
 3. **Acesse as aplicações:**
+- **Credenciais padrão**: utilize o email `john.doe@example.com` e a senha `123456` para autenticar-se.
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:3001
 - **PostgreSQL**: localhost:5432
@@ -145,7 +146,7 @@ pnpm dev --filter=web
 
 - **Surveyor (Vistoriador)**: Usuários que realizam vistorias
 - **Vehicle (Veículo)**: Veículos a serem vistoriados
-- **Invoice (Fatura)**: Faturas de vistoria
+- **Invoice (Vistoria)**: Vistorias realizadas
 - **Problem (Problema)**: Problemas encontrados nas vistorias
 
 ### Migrações
@@ -162,7 +163,6 @@ Em ambiente de desenvolvimento, o sistema popula automaticamente o banco com dad
 ```bash
 pnpm dev          # Executa todas as aplicações em modo desenvolvimento
 pnpm build        # Build de todas as aplicações
-pnpm test         # Executa todos os testes
 pnpm lint         # Executa linting em todo o projeto
 pnpm format       # Formata o código com Prettier
 pnpm check-types  # Verifica tipos TypeScript
@@ -172,7 +172,6 @@ pnpm check-types  # Verifica tipos TypeScript
 ```bash
 pnpm dev --filter=api                    # Desenvolvimento da API
 pnpm build --filter=api                  # Build da API
-pnpm test --filter=api                   # Testes da API
 pnpm migration:generate --filter=api     # Gerar nova migração
 pnpm migration:run --filter=api          # Executar migrações
 pnpm seed --filter=api                   # Executar seeds
@@ -190,7 +189,6 @@ pnpm start --filter=web      # Executar em produção
 O sistema utiliza JWT (JSON Web Tokens) para autenticação:
 
 - **Login**: `/auth/sign-in`
-- **Registro**: `/auth/sign-up`
 - **Refresh Token**: Implementado para renovação automática
 - **Proteção de Rotas**: Middleware de autenticação no frontend
 
@@ -202,12 +200,6 @@ O sistema utiliza JWT (JSON Web Tokens) para autenticação:
 - Criação de novas faturas
 - Gestão de veículos
 - Relatórios de vistorias
-
-### Para Administradores
-- Gestão completa de vistoriadores
-- Aprovação/reprovação de faturas
-- Relatórios gerenciais
-- Configurações do sistema
 
 ## 📝 Licença
 
